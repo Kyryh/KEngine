@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,9 @@ namespace KEngine.Components.DrawableComponents
             KGame.Instance.AddDrawableComponent(this);
         }
 
+        public virtual void Draw(SpriteBatch spriteBatch) {
+
+        }
         public override void OnDestroy()
         {
             KGame.Instance.RemoveDrawableComponent(this);

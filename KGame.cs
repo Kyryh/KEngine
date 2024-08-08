@@ -1,5 +1,7 @@
 ﻿using KEngine.Components;
+using KEngine.Components.DrawableComponents;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,10 @@ namespace KEngine {
     public abstract class KGame : Game {
         public static KGame Instance { private set; get; }
 
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+
+
         protected bool reorderDrawablesBeforeDrawing;
 
         List<GameObject> gameObjects = new();
@@ -19,6 +25,12 @@ namespace KEngine {
         protected KGame()
         {
             Instance = this;
+            graphics = new GraphicsDeviceManager(this);
+        }
+
+        protected override void LoadContent() {
+            base.LoadContent();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
         public void AddGameObject(GameObject gameObject) {
             gameObjects.Add(gameObject);
@@ -60,6 +72,10 @@ namespace KEngine {
             base.Draw(gameTime);
             if (reorderDrawablesBeforeDrawing) {
                 drawableComponents.Sort(DrawableComparer);
+            }
+            for (int i = 0; i < drawableComponents.Count; i++)
+            {
+                drawableComponents[i].Draw(spriteBatch);
             }
         }
 
