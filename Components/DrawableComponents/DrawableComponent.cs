@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KEngine.Components {
-    public abstract class DrawableComponent : Component {
-        public virtual int DrawingPriority => 0;
+namespace KEngine.Components.DrawableComponents
+{
+    public abstract class DrawableComponent : Component
+    {
+        public int drawingPriority;
         protected DrawableComponent()
         {
             KGame.Instance.AddDrawableComponent(this);
         }
 
-        public override void OnDestroy() {
+        public override void OnDestroy()
+        {
             KGame.Instance.RemoveDrawableComponent(this);
             base.OnDestroy();
         }
