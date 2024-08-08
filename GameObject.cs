@@ -13,6 +13,69 @@ namespace KEngine
         private readonly List<Component> components = new();
 
 
+        public void AddComponent<T>() where T : Component, new() {
+            AddComponent(new T());
+        }
+
+        private void AddComponent(Component component) {
+            if (components.Contains(component))
+                throw new ArgumentException($"Component is already present in GameObject {Name}");
+            components.Add(component);
+            component.Initialize();
+        }
+
+        public T GetComponent<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
+            for (int i = 0; i < components.Count; i++) {
+                if (!(activeOnly || components[i].Active))
+                    continue;
+
+                if (components[i] is T component) {
+                    return component;
+                }
+            }
+            if (searchInChildren) {
+                for (int i = 0; i < children.Count; i++) {
+                    if (children[i].TryGetComponent<T>(out var component, activeOnly, true))
+                        return component;
+                }
+            }
+
+            return null;
+        }
+
+        public bool TryGetComponent<T>(out T component, bool activeOnly = true, bool searchInChildren = false) where T : Component {
+            component = GetComponent<T>(activeOnly, searchInChildren);
+            return component != null;
+        }
+
+        public List<T> GetComponents<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
+            List<T> result = new();
+            for (int i = 0; i < components.Count; i++) {
+                if (!(activeOnly || components[i].Active))
+                    continue;
+
+                if (components[i] is T component) {
+                    result.Add(component);
+                }
+            }
+            if (searchInChildren) {
+                for (int i = 0; i < children.Count; i++) {
+                    result.AddRange(children[i].GetComponents<T>(activeOnly, true));
+                }
+            }
+            return result;
+        }
+
+        public void Destroy() {
+            for (int i = 0; i < components.Count; i++) {
+                components[i].OnDisable();
+                components[i].OnDestroy();
+            }
+            for (int i = 0; i < children.Count; i++)
+            {
+                children[i].Destroy();
+            }
+        }
 
     }
 }
