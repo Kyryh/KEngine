@@ -28,6 +28,17 @@ namespace KEngine {
             graphics = new GraphicsDeviceManager(this);
         }
 
+
+        static Dictionary<string, object> assets = new();
+
+        public static T GetContent<T>(string assetName) {
+            if (assets.TryGetValue(assetName, out var asset)) {
+                return (T)asset;
+            }
+            assets[assetName] = Instance.Content.Load<T>(assetName);
+            return (T)assets[assetName];
+        }
+
         protected override void LoadContent() {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
