@@ -47,7 +47,7 @@ namespace KEngine.Components {
         }
 
         public virtual void OnDestroy() {
-
+            KGame.Instance.RemoveComponent(this);
         }
 
     }

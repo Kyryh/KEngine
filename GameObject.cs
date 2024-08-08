@@ -80,6 +80,7 @@ namespace KEngine
             {
                 children[i].Destroy();
             }
+            KGame.Instance.RemoveGameObject(this);
         }
 
     }

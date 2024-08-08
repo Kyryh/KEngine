@@ -11,5 +11,10 @@ namespace KEngine.Components {
         {
             KGame.Instance.AddDrawableComponent(this);
         }
+
+        public override void OnDestroy() {
+            KGame.Instance.RemoveDrawableComponent(this);
+            base.OnDestroy();
+        }
     }
 }

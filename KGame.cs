@@ -34,6 +34,16 @@ namespace KEngine {
             drawableComponents.Add(component);
         }
 
+        public void RemoveGameObject(GameObject gameObject) {
+            gameObjects.Remove(gameObject);
+        }
+        public void RemoveComponent(Component component) {
+            components.Remove(component);
+        }
+        public void RemoveDrawableComponent(DrawableComponent component) {
+            drawableComponents.Remove(component);
+        }
+
         protected override void Update(GameTime gameTime) {
             base.Update(gameTime);
 
