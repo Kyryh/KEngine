@@ -8,5 +8,50 @@ using System.Threading.Tasks;
 
 namespace KEngine {
     public abstract class KGame : Game {
+        public static KGame Instance { private set; get; }
+
+        protected bool reorderDrawablesBeforeDrawing;
+
+        List<GameObject> gameObjects = new();
+        List<Component> components = new();
+        List<DrawableComponent> drawableComponents = new();
+        
+        protected KGame()
+        {
+            Instance = this;
+        }
+        public void AddGameObject(GameObject gameObject) {
+            gameObjects.Add(gameObject);
+        }
+
+        public void AddComponent(Component component) {
+            // TODO: Don't just append, add it in the correct spot 
+            components.Add(component);
+        }
+
+        public void AddDrawableComponent(DrawableComponent component) {
+            // TODO: same thing as above
+            drawableComponents.Add(component);
+        }
+
+        protected override void Update(GameTime gameTime) {
+            base.Update(gameTime);
+
+            foreach (var component in components) {
+                component.Update(gameTime.ElapsedGameTime.Seconds);
+            }
+        }
+
+        protected virtual int DrawableComparer(DrawableComponent a, DrawableComponent b) {
+            return 0;
+        }
+
+        protected override void Draw(GameTime gameTime) {
+            base.Draw(gameTime);
+            if (reorderDrawablesBeforeDrawing) {
+                drawableComponents.Sort(DrawableComparer);
+            }
+        }
+
     }
 }

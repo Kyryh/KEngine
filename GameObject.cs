@@ -13,6 +13,11 @@ namespace KEngine
         private readonly List<Component> components = new();
 
 
+        public GameObject()
+        {
+            Transform = new Transform();
+            KGame.Instance.AddGameObject(this);
+        }
         public void AddComponent<T>() where T : Component, new() {
             AddComponent(new T());
         }

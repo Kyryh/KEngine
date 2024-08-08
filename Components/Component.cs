@@ -24,6 +24,7 @@ namespace KEngine.Components {
 
         protected Component()
         {
+            KGame.Instance.AddComponent(this);
         }
         public virtual void Initialize() {
 
