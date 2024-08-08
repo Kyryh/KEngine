@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using KEngine.Components;
+using Microsoft.Xna.Framework;
 
 namespace KEngine
 {
@@ -13,9 +14,19 @@ namespace KEngine
         private readonly List<Component> components = new();
 
 
-        public GameObject()
-        {
-            Transform = new Transform();
+        public GameObject(
+            string name,
+            Vector2? position = null,
+            float rotation = 0,
+            Vector2? scale = null
+        ) {
+            Name = name;
+            Transform = new Transform() {
+                position = position ?? Vector2.Zero,
+                rotation = rotation,
+                scale = scale ?? Vector2.One
+            };
+
             KGame.Instance.AddGameObject(this);
         }
         public void AddComponent<T>() where T : Component, new() {
