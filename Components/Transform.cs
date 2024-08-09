@@ -11,25 +11,25 @@ namespace KEngine.Components
 
         public Vector2 GlobalPosition {
             get {
-                if (gameObject.parent == null)
+                if (GameObject.parent == null)
                     return position;
-                return gameObject.parent.Transform.GlobalPosition + position;
+                return GameObject.parent.Transform.GlobalPosition + position;
             }
         }
 
         public float GlobalRotation {
             get {
-                if (gameObject.parent == null)
+                if (GameObject.parent == null)
                     return rotation;
-                return gameObject.parent.Transform.GlobalRotation + rotation;
+                return GameObject.parent.Transform.GlobalRotation + rotation;
             }
         }
 
         public Vector2 GlobalScale {
             get {
-                if (gameObject.parent == null)
+                if (GameObject.parent == null)
                     return scale;
-                return gameObject.parent.Transform.GlobalScale + scale;
+                return GameObject.parent.Transform.GlobalScale + scale;
             }
         }
     }

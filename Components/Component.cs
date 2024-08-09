@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace KEngine.Components {
     public abstract class Component {
 
@@ -17,8 +19,19 @@ namespace KEngine.Components {
             }
         }
 
-        protected readonly GameObject gameObject;
-        protected Transform Transform => gameObject.Transform;
+        private GameObject gameObject;
+
+        public GameObject GameObject {
+            get {
+                return gameObject;
+            }
+            set {
+                if (gameObject is not null)
+                    throw new InvalidOperationException("GameObject already set");
+                gameObject = value;
+            }
+        }
+        protected Transform Transform => GameObject.Transform;
 
         public virtual int UpdatePriority => 0;
 
