@@ -10,6 +10,7 @@ namespace KEngine.Components.DrawableComponents
     public abstract class DrawableComponent : Component
     {
         public int drawingPriority;
+        protected float LayerDepth => 0f;
         protected DrawableComponent()
         {
             KGame.Instance.AddDrawableComponent(this);

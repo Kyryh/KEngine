@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace KEngine.Components.DrawableComponents {
     public class SpriteRenderer : DrawableComponent {
         public string spriteName;
-        float LayerDepth => 0f;
         public override void Draw(SpriteBatch spriteBatch) {
             var texture = KGame.GetContent<Texture2D>(spriteName);
             spriteBatch.Draw(
