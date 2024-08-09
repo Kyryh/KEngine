@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace KEngine.Components {
-    internal class Camera : Component {
+    public class Camera : Component {
         public static Camera MainCamera { get; private set; }
 
         public float size;
