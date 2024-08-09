@@ -84,10 +84,13 @@ namespace KEngine {
             if (reorderDrawablesBeforeDrawing) {
                 drawableComponents.Sort(DrawableComparer);
             }
+
+            spriteBatch.Begin();
             for (int i = 0; i < drawableComponents.Count; i++)
             {
                 drawableComponents[i].Draw(spriteBatch);
             }
+            spriteBatch.End();
         }
 
     }
