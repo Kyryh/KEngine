@@ -32,7 +32,6 @@ namespace KEngine.Components {
                 gameObject = value;
             }
         }
-        protected Transform Transform => GameObject.Transform;
 
         public virtual int UpdatePriority => 0;
 

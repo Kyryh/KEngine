@@ -14,12 +14,12 @@ namespace KEngine.Components.DrawableComponents {
             var texture = KGame.GetContent<Texture2D>(spriteName);
             spriteBatch.Draw(
                 texture,
-                Transform.GlobalPosition,
+                GameObject.GlobalPosition,
                 null,
                 Color.White,
-                Transform.GlobalRotation,
+                GameObject.GlobalRotation,
                 new Vector2(texture.Width/2f, texture.Height/2f),
-                Transform.GlobalScale,
+                GameObject.GlobalScale,
                 SpriteEffects.None,
                 LayerDepth
             );

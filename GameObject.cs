@@ -10,7 +10,11 @@ namespace KEngine
         public string Name { get; init; }
         public GameObject parent;
         public List<GameObject> children;
-        public Transform Transform { get; }
+
+        public Vector2 position;
+        public float rotation;
+        public Vector2 scale;
+
         private readonly List<Component> components = new();
 
 
@@ -22,12 +26,10 @@ namespace KEngine
             Component[] components = null
         ) {
             Name = name;
-            Transform = new Transform() {
-                position = position ?? Vector2.Zero,
-                rotation = rotation,
-                scale = scale ?? Vector2.One,
-                GameObject = this
-            };
+
+            this.position = position ?? Vector2.Zero;
+            this.rotation = rotation;
+            this.scale = scale ?? Vector2.One;
 
             if (components != null) {
                 for (int i = 0; i < components.Length; i++) {
@@ -36,6 +38,30 @@ namespace KEngine
             }
 
             KGame.Instance.AddGameObject(this);
+        }
+
+        public Vector2 GlobalPosition {
+            get {
+                if (parent == null)
+                    return position;
+                return parent.GlobalPosition + position;
+            }
+        }
+
+        public float GlobalRotation {
+            get {
+                if (parent == null)
+                    return rotation;
+                return parent.GlobalRotation + rotation;
+            }
+        }
+
+        public Vector2 GlobalScale {
+            get {
+                if (parent == null)
+                    return scale;
+                return parent.GlobalScale + scale;
+            }
         }
         public void AddComponent<T>() where T : Component, new() {
             AddComponent(new T());
