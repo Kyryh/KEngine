@@ -25,7 +25,8 @@ namespace KEngine
             Transform = new Transform() {
                 position = position ?? Vector2.Zero,
                 rotation = rotation,
-                scale = scale ?? Vector2.One
+                scale = scale ?? Vector2.One,
+                GameObject = this
             };
 
             if (components != null) {
@@ -44,6 +45,7 @@ namespace KEngine
             if (components.Contains(component))
                 throw new ArgumentException($"Component is already present in GameObject {Name}");
             components.Add(component);
+            component.GameObject = this;
             component.Initialize();
         }
 
