@@ -38,6 +38,13 @@ namespace KEngine {
             return (T)assets[assetName];
         }
 
+        protected override void Initialize() {
+            base.Initialize();
+            foreach (var layer in drawingLayers)
+            {
+                drawableComponents[layer] = new();
+            }
+        }
         protected override void LoadContent() {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
