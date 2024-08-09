@@ -12,9 +12,8 @@ namespace KEngine {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-
-        List<GameObject> gameObjects = new();
-        List<Component> components = new();
+        HashSet<GameObject> gameObjects = new();
+        SortedSet<Component> components = new(new Component.UpdatePriorityComparer());
         Dictionary<string, HashSet<DrawableComponent>> drawableComponents = new();
 
         protected string[] drawingLayers = new string[] {
