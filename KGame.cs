@@ -71,7 +71,7 @@ namespace KEngine {
             base.Update(gameTime);
 
             foreach (var component in components) {
-                component.Update(gameTime.ElapsedGameTime.Seconds);
+                component.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
         }
 
