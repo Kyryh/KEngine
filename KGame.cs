@@ -26,6 +26,9 @@ namespace KEngine {
             graphics = new GraphicsDeviceManager(this);
         }
 
+        public static Vector2 GetScreenSize() {
+            return new Vector2(Instance.graphics.PreferredBackBufferWidth, Instance.graphics.PreferredBackBufferHeight);
+        }
 
         static Dictionary<string, object> assets = new();
 
