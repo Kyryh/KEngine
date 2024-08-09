@@ -51,7 +51,7 @@ namespace KEngine.Components {
 
         }
 
-        public virtual void Update(double deltaTime) {
+        public virtual void Update(float deltaTime) {
 
         }
 

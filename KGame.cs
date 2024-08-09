@@ -79,9 +79,10 @@ namespace KEngine {
 
         protected override void Update(GameTime gameTime) {
             base.Update(gameTime);
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             foreach (var component in components) {
-                component.Update(gameTime.ElapsedGameTime.TotalSeconds);
+                component.Update(deltaTime);
             }
         }
 
