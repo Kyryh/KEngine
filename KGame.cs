@@ -12,9 +12,9 @@ namespace KEngine {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        HashSet<GameObject> gameObjects = new();
-        SortedSet<Component> components = new(new Component.UpdatePriorityComparer());
-        Dictionary<string, HashSet<DrawableComponent>> drawableComponents = new();
+        List<GameObject> gameObjects = new();
+        List<Component> components = new();
+        Dictionary<string, List<DrawableComponent>> drawableComponents = new();
 
         protected string[] drawingLayers = new string[] {
             "Default"
@@ -53,6 +53,13 @@ namespace KEngine {
         }
 
         public void AddComponent(Component component) {
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (components[i].UpdateGroup > component.UpdateGroup) {
+                    components.Insert(i, component);
+                    return;
+                }
+            }
             components.Add(component);
         }
 

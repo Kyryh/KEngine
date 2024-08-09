@@ -33,7 +33,7 @@ namespace KEngine.Components {
             }
         }
 
-        public virtual int UpdatePriority => 0;
+        public virtual int UpdateGroup => 0;
 
         protected Component()
         {
@@ -63,10 +63,5 @@ namespace KEngine.Components {
             KGame.Instance.RemoveComponent(this);
         }
 
-        internal class UpdatePriorityComparer : IComparer<Component> {
-            public int Compare(Component x, Component y) {
-                return y.UpdatePriority.CompareTo(x.UpdatePriority);
-            }
-        }
     }
 }
