@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KEngine {
     public abstract class KGame : Game {
@@ -18,8 +15,12 @@ namespace KEngine {
 
         List<GameObject> gameObjects = new();
         List<Component> components = new();
-        List<DrawableComponent> drawableComponents = new();
-        
+        Dictionary<string, HashSet<DrawableComponent>> drawableComponents = new();
+
+        protected string[] drawingLayers = new string[] {
+            "Default"
+        };
+
         protected KGame()
         {
             Instance = this;
@@ -52,7 +53,7 @@ namespace KEngine {
 
         public void AddDrawableComponent(DrawableComponent component) {
             // TODO: same thing as above
-            drawableComponents.Add(component);
+            drawableComponents[component.drawingLayer].Add(component);
         }
 
         public void RemoveGameObject(GameObject gameObject) {
@@ -62,7 +63,7 @@ namespace KEngine {
             components.Remove(component);
         }
         public void RemoveDrawableComponent(DrawableComponent component) {
-            drawableComponents.Remove(component);
+            drawableComponents[component.drawingLayer].Remove(component);
         }
 
         protected override void Update(GameTime gameTime) {
@@ -76,12 +77,16 @@ namespace KEngine {
         protected override void Draw(GameTime gameTime) {
             base.Draw(gameTime);
 
-            spriteBatch.Begin();
-            for (int i = 0; i < drawableComponents.Count; i++)
+            for (int i = 0; i < drawingLayers.Length; i++)
             {
-                drawableComponents[i].Draw(spriteBatch);
+                var layer = drawingLayers[i];
+                spriteBatch.Begin();
+                foreach (var component in drawableComponents[layer])
+                {
+                    component.Draw(spriteBatch);
+                }
+                spriteBatch.End();
             }
-            spriteBatch.End();
         }
 
     }

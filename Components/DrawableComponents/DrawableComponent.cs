@@ -9,7 +9,7 @@ namespace KEngine.Components.DrawableComponents
 {
     public abstract class DrawableComponent : Component
     {
-        public int drawingLayer;
+        public string drawingLayer = "Default";
         protected float LayerDepth => 0f;
         protected DrawableComponent()
         {
