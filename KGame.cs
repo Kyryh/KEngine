@@ -53,12 +53,10 @@ namespace KEngine {
         }
 
         public void AddComponent(Component component) {
-            // TODO: Don't just append, add it in the correct spot 
             components.Add(component);
         }
 
         public void AddDrawableComponent(DrawableComponent component) {
-            // TODO: same thing as above
             drawableComponents[component.drawingLayer].Add(component);
         }
 
