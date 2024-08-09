@@ -16,8 +16,6 @@ namespace KEngine {
         protected SpriteBatch spriteBatch;
 
 
-        protected bool reorderDrawablesBeforeDrawing;
-
         List<GameObject> gameObjects = new();
         List<Component> components = new();
         List<DrawableComponent> drawableComponents = new();
@@ -75,15 +73,8 @@ namespace KEngine {
             }
         }
 
-        protected virtual int DrawableComparer(DrawableComponent a, DrawableComponent b) {
-            return 0;
-        }
-
         protected override void Draw(GameTime gameTime) {
             base.Draw(gameTime);
-            if (reorderDrawablesBeforeDrawing) {
-                drawableComponents.Sort(DrawableComparer);
-            }
 
             spriteBatch.Begin();
             for (int i = 0; i < drawableComponents.Count; i++)
