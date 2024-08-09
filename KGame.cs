@@ -46,6 +46,12 @@ namespace KEngine {
             {
                 drawableComponents[layer] = new();
             }
+            new GameObject(
+                "Main Camera",
+                components: new[] {
+                    Camera.CreateMainCamera()
+                }
+            );
         }
         protected override void LoadContent() {
             base.LoadContent();
