@@ -26,8 +26,8 @@ namespace KEngine.Components {
         }
 
         public Vector2 ScreenToWorld(Vector2 position) {
-            position.Y *= -1;
             position += GameObject.GlobalPosition - KGame.GetScreenSize() / 2;
+            position.Y *= -1;
             return position;
         }
 
