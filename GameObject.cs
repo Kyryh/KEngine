@@ -18,7 +18,8 @@ namespace KEngine
             string name,
             Vector2? position = null,
             float rotation = 0,
-            Vector2? scale = null
+            Vector2? scale = null,
+            Component[] components = null
         ) {
             Name = name;
             Transform = new Transform() {
@@ -26,6 +27,12 @@ namespace KEngine
                 rotation = rotation,
                 scale = scale ?? Vector2.One
             };
+
+            if (components != null) {
+                for (int i = 0; i < components.Length; i++) {
+                    AddComponent(components[i]);
+                }
+            }
 
             KGame.Instance.AddGameObject(this);
         }
