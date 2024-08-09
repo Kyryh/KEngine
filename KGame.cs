@@ -12,8 +12,8 @@ namespace KEngine {
     public abstract class KGame : Game {
         public static KGame Instance { private set; get; }
 
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        protected GraphicsDeviceManager graphics;
+        protected SpriteBatch spriteBatch;
 
 
         protected bool reorderDrawablesBeforeDrawing;
