@@ -16,6 +16,9 @@ namespace KEngine {
         List<Component> components = new();
         Dictionary<string, List<DrawableComponent>> drawableComponents = new();
 
+        Queue<Component> componentsToInitialize = new();
+        LinkedList<Component> componentsToStart = new();
+
         protected string[] drawingLayers = new string[] {
             "Default"
         };
@@ -70,6 +73,8 @@ namespace KEngine {
                 }
             }
             components.Add(component);
+            componentsToInitialize.Enqueue(component);
+            componentsToStart.AddLast(component);
         }
 
         public void AddDrawableComponent(DrawableComponent component) {
@@ -89,6 +94,21 @@ namespace KEngine {
         protected override void Update(GameTime gameTime) {
             base.Update(gameTime);
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            for (int i = 0; i < componentsToInitialize.Count; i++)
+            {
+                componentsToInitialize.Dequeue().Initialize();
+            }
+
+            var node = componentsToStart.First;
+            while (node != null) {
+                var next = node.Next;
+                if (node.Value.Active) {
+                    node.Value.Start();
+                    componentsToStart.Remove(node);
+                }
+                node = next;
+            }
 
             foreach (var component in components) {
                 component.Update(deltaTime);
