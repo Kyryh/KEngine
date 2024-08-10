@@ -28,8 +28,8 @@ namespace KEngine.Components {
 
         void RecalculateMatrices() {
             var screenSize = KGame.GetScreenSize();
-            ScreenToWorldMatrix = 
-                  Matrix.CreateTranslation(-screenSize.ToVector3() / 2)
+            ScreenToWorldMatrix = Matrix.Identity
+                * Matrix.CreateTranslation(-screenSize.ToVector3() / 2)
                 * Matrix.CreateScale(1, -1, 1)
                 * Matrix.CreateRotationZ(-GameObject.GlobalRotation)
                 * Matrix.CreateScale(size / KGame.GetScreenSize().X)
