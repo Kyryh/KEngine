@@ -26,6 +26,10 @@ namespace KEngine.Components {
         }
 
 
+        public override void Update(float deltaTime) {
+            base.Update(deltaTime);
+            RecalculateMatrices();
+        }
         void RecalculateMatrices() {
             var screenSize = KGame.GetScreenSize();
             ScreenToWorldMatrix = Matrix.Identity
@@ -39,17 +43,11 @@ namespace KEngine.Components {
             WorldToScreenMatrix = Matrix.Invert(ScreenToWorldMatrix);
         }
         public Vector2 WorldToScreen(Vector2 position) {
-
-            RecalculateMatrices();
-
-            
             return Vector2.Transform(position, WorldToScreenMatrix);
         }
 
         public Vector2 ScreenToWorld(Vector2 position) {
-            position += GameObject.GlobalPosition - KGame.GetScreenSize() / 2;
-            position.Y *= -1;
-            return position;
+            return Vector2.Transform(position, ScreenToWorldMatrix);
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth) {
