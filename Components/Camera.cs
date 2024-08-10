@@ -12,15 +12,8 @@ namespace KEngine.Components {
     public class Camera : Component {
         public static Camera MainCamera { get; private set; }
 
-        private float size = 10f;
-        public float Size {
-            get {
-                return size / KGame.GetScreenSize().X;
-            }
-            set {
-                size = value * KGame.GetScreenSize().X;
-            }
-        }
+        public float size = 10f;
+
 
         public Matrix WorldToScreenMatrix { private set; get; }
         public Matrix ScreenToWorldMatrix { private set; get; }
@@ -39,7 +32,7 @@ namespace KEngine.Components {
                   Matrix.CreateTranslation(-screenSize.ToVector3() / 2)
                 * Matrix.CreateScale(1, -1, 1)
                 * Matrix.CreateRotationZ(-GameObject.GlobalRotation)
-                * Matrix.CreateScale(Size)
+                * Matrix.CreateScale(size / KGame.GetScreenSize().X)
                 * Matrix.CreateTranslation(GameObject.GlobalPosition.ToVector3())
                 ;
 
@@ -59,12 +52,18 @@ namespace KEngine.Components {
             return position;
         }
 
-        public float WorldToScreen(float rotation) {
-            return rotation - GameObject.GlobalRotation;
-        }
-
-        public float ScreenToWorld(float rotation) {
-            return rotation + GameObject.GlobalRotation;
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth) {
+            spriteBatch.Draw(
+                texture,
+                WorldToScreen(position),
+                sourceRectangle,
+                color,
+                rotation - GameObject.GlobalRotation,
+                origin,
+                scale / size * KGame.GetScreenSize().X,
+                effects,
+                layerDepth
+            );
         }
 
 
