@@ -19,7 +19,7 @@ namespace KEngine.Components.DrawableComponents {
                 Color.White,
                 Camera.MainCamera.WorldToScreen(GameObject.GlobalRotation),
                 new Vector2(texture.Width/2f, texture.Height/2f),
-                GameObject.GlobalScale,
+                GameObject.GlobalScale/Camera.MainCamera.Size,
                 SpriteEffects.None,
                 LayerDepth
             );
