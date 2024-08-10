@@ -35,12 +35,9 @@ namespace KEngine.Components {
 
         public virtual int UpdateGroup => 0;
 
-        protected Component()
-        {
-            KGame.Instance.AddComponent(this);
-        }
         public virtual void Initialize() {
 
+            KGame.Instance.AddComponent(this);
         }
 
         public virtual void Start() {
