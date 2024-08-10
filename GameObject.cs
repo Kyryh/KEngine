@@ -63,9 +63,6 @@ namespace KEngine
                 return parent.GlobalScale + scale;
             }
         }
-        public void AddComponent<T>() where T : Component, new() {
-            AddComponent(new T());
-        }
 
         private void AddComponent(Component component) {
             if (components.Contains(component))
