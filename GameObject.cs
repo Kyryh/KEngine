@@ -8,6 +8,16 @@ namespace KEngine
     public class GameObject {
 
         public string Name { get; init; }
+
+        public bool active;
+        public bool IsActive {
+            get {
+                if (parent == null)
+                    return active;
+                return active && parent.IsActive;
+            }
+        }
+
         public GameObject parent;
         public List<GameObject> children;
 
@@ -23,6 +33,7 @@ namespace KEngine
             Vector2? position = null,
             float rotation = 0,
             Vector2? scale = null,
+            bool active = true,
             Component[] components = null,
             GameObject[] children = null
         ) {
@@ -31,6 +42,8 @@ namespace KEngine
             this.position = position ?? Vector2.Zero;
             this.rotation = rotation;
             this.scale = scale ?? Vector2.One;
+
+            this.active = active;
 
             if (components != null) {
                 for (int i = 0; i < components.Length; i++) {
