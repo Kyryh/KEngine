@@ -73,7 +73,6 @@ namespace KEngine
                 throw new ArgumentException($"Component is already present in GameObject {Name}");
             components.Add(component);
             component.GameObject = this;
-            component.Initialize();
         }
 
         public T GetComponent<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
