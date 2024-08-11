@@ -23,7 +23,8 @@ namespace KEngine
             Vector2? position = null,
             float rotation = 0,
             Vector2? scale = null,
-            Component[] components = null
+            Component[] components = null,
+            GameObject[] children = null
         ) {
             Name = name;
 
@@ -35,6 +36,9 @@ namespace KEngine
                 for (int i = 0; i < components.Length; i++) {
                     AddComponent(components[i]);
                 }
+            }
+            if (children != null) {
+                this.children.AddRange(children);
             }
 
             KGame.Instance.AddGameObject(this);
