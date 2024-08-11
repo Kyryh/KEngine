@@ -52,6 +52,10 @@ namespace KEngine
             }
             if (children != null) {
                 this.children.AddRange(children);
+                foreach (var child in children)
+                {
+                    child.parent = this;
+                }
             }
 
             KGame.Instance.AddGameObject(this);
