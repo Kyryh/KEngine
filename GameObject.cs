@@ -12,13 +12,13 @@ namespace KEngine
         public bool active;
         public bool IsActive {
             get {
-                if (parent == null)
+                if (Parent == null)
                     return active;
-                return active && parent.IsActive;
+                return active && Parent.IsActive;
             }
         }
 
-        public GameObject parent;
+        public GameObject Parent { get; private set; }
         public readonly GameObject[] children = Array.Empty<GameObject>();
 
         public Vector2 position;
@@ -57,7 +57,7 @@ namespace KEngine
                 this.children = new GameObject[children.Length];
                 for (int i = 0; i < children.Length; i++) {
                     this.children[i] = children[i];
-                    this.children[i].parent = this;
+                    this.children[i].Parent = this;
                 }
             }
 
@@ -66,25 +66,25 @@ namespace KEngine
 
         public Vector2 GlobalPosition {
             get {
-                if (parent == null)
+                if (Parent == null)
                     return position;
-                return parent.GlobalPosition + position;
+                return Parent.GlobalPosition + position;
             }
         }
 
         public float GlobalRotation {
             get {
-                if (parent == null)
+                if (Parent == null)
                     return rotation;
-                return parent.GlobalRotation + rotation;
+                return Parent.GlobalRotation + rotation;
             }
         }
 
         public Vector2 GlobalScale {
             get {
-                if (parent == null)
+                if (Parent == null)
                     return scale;
-                return parent.GlobalScale + scale;
+                return Parent.GlobalScale + scale;
             }
         }
 
