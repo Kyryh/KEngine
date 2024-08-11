@@ -19,13 +19,13 @@ namespace KEngine
         }
 
         public GameObject parent;
-        public List<GameObject> children;
+        public readonly GameObject[] children = Array.Empty<GameObject>();
 
         public Vector2 position;
         public float rotation;
         public Vector2 scale;
 
-        private readonly List<Component> components = new();
+        private readonly Component[] components = Array.Empty<Component>();
 
 
         public GameObject(
@@ -46,15 +46,18 @@ namespace KEngine
             this.active = active;
 
             if (components != null) {
+                this.components = new Component[components.Length];
                 for (int i = 0; i < components.Length; i++) {
-                    AddComponent(components[i]);
+                    this.components[i] = components[i];
+                    this.components[i].GameObject = this;
                 }
             }
+
             if (children != null) {
-                this.children.AddRange(children);
-                foreach (var child in children)
-                {
-                    child.parent = this;
+                this.children = new GameObject[children.Length];
+                for (int i = 0; i < children.Length; i++) {
+                    this.children[i] = children[i];
+                    this.children[i].parent = this;
                 }
             }
 
@@ -85,15 +88,9 @@ namespace KEngine
             }
         }
 
-        private void AddComponent(Component component) {
-            if (components.Contains(component))
-                throw new ArgumentException($"Component is already present in GameObject {Name}");
-            components.Add(component);
-            component.GameObject = this;
-        }
 
         public T GetComponent<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
-            for (int i = 0; i < components.Count; i++) {
+            for (int i = 0; i < components.Length; i++) {
                 if (!(activeOnly || components[i].Active))
                     continue;
 
@@ -102,7 +99,7 @@ namespace KEngine
                 }
             }
             if (searchInChildren) {
-                for (int i = 0; i < children.Count; i++) {
+                for (int i = 0; i < children.Length; i++) {
                     if (children[i].TryGetComponent<T>(out var component, activeOnly, true))
                         return component;
                 }
@@ -118,7 +115,7 @@ namespace KEngine
 
         public List<T> GetComponents<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
             List<T> result = new();
-            for (int i = 0; i < components.Count; i++) {
+            for (int i = 0; i < components.Length; i++) {
                 if (!(activeOnly || components[i].Active))
                     continue;
 
@@ -127,7 +124,7 @@ namespace KEngine
                 }
             }
             if (searchInChildren) {
-                for (int i = 0; i < children.Count; i++) {
+                for (int i = 0; i < children.Length; i++) {
                     result.AddRange(children[i].GetComponents<T>(activeOnly, true));
                 }
             }
@@ -135,11 +132,11 @@ namespace KEngine
         }
 
         public void Destroy() {
-            for (int i = 0; i < components.Count; i++) {
+            for (int i = 0; i < components.Length; i++) {
                 components[i].OnDisable();
                 components[i].OnDestroy();
             }
-            for (int i = 0; i < children.Count; i++)
+            for (int i = 0; i < children.Length; i++)
             {
                 children[i].Destroy();
             }
