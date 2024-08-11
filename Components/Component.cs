@@ -20,6 +20,8 @@ namespace KEngine.Components {
             }
         }
 
+        public bool IsActive => Active && GameObject.IsActive;
+
         private GameObject gameObject;
 
         public GameObject GameObject {

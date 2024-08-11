@@ -91,7 +91,7 @@ namespace KEngine
 
         public T GetComponent<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
             for (int i = 0; i < components.Length; i++) {
-                if (!(activeOnly || components[i].Active))
+                if (!(activeOnly || components[i].IsActive))
                     continue;
 
                 if (components[i] is T component) {
@@ -116,7 +116,7 @@ namespace KEngine
         public List<T> GetComponents<T>(bool activeOnly = true, bool searchInChildren = false) where T : Component {
             List<T> result = new();
             for (int i = 0; i < components.Length; i++) {
-                if (!(activeOnly || components[i].Active))
+                if (!(activeOnly || components[i].IsActive))
                     continue;
 
                 if (components[i] is T component) {
