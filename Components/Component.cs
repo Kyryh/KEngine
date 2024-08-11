@@ -12,11 +12,13 @@ namespace KEngine.Components {
                 return active;
             }
             set {
+                if (active != value) {
+                    if (value)
+                        OnEnable();
+                    else
+                        OnDisable();
+                }
                 active = value;
-                if (value)
-                    OnEnable();
-                else
-                    OnDisable();
             }
         }
 
