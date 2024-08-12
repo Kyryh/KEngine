@@ -10,17 +10,22 @@ using System.Threading.Tasks;
 namespace KEngine.Components.DrawableComponents {
     public class SpriteRenderer : DrawableComponent {
         public string spriteName;
+        Sprite sprite;
+        public override void Initialize() {
+            base.Initialize();
+            sprite = KGame.GetSprite(spriteName);
+            
+        }
         public override void Draw(SpriteBatch spriteBatch) {
-            var texture = KGame.GetContent<Texture2D>(spriteName);
             Camera.MainCamera.Draw(
                 spriteBatch,
-                texture,
+                sprite.Texture,
                 GameObject.GlobalPosition,
                 null,
                 Color.White,
                 GameObject.GlobalRotation,
-                new Vector2(texture.Width/2f, texture.Height/2f),
-                GameObject.GlobalScale,
+                sprite.Center,
+                sprite.Scale*GameObject.GlobalScale,
                 SpriteEffects.None,
                 LayerDepth
             );

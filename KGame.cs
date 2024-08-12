@@ -34,6 +34,7 @@ namespace KEngine {
         }
 
         static Dictionary<string, object> assets = new();
+        static Dictionary<string, Sprite> sprites = new();
 
         public static T GetContent<T>(string assetName) {
             if (assets.TryGetValue(assetName, out var asset)) {
@@ -41,6 +42,20 @@ namespace KEngine {
             }
             assets[assetName] = Instance.Content.Load<T>(assetName);
             return (T)assets[assetName];
+        }
+
+        protected static void InitSprites(IEnumerable<Sprite> sprites) {
+            foreach (var sprite in sprites)
+            {
+                KGame.sprites[sprite.SpriteName] = sprite;
+            }
+        }
+
+        public static Sprite GetSprite(string spriteName) {
+            if (sprites.TryGetValue(spriteName, out var sprite))
+                return sprite;
+            sprites[spriteName] = new(spriteName, true, Vector2.Zero, Vector2.One);
+            return sprites[spriteName];
         }
 
         protected override void Initialize() {
