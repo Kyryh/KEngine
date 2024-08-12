@@ -91,7 +91,7 @@ namespace KEngine
             get {
                 if (Parent == null)
                     return scale;
-                return Parent.GlobalScale + scale;
+                return Parent.GlobalScale * scale;
             }
         }
 
