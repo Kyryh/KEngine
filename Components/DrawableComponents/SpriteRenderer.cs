@@ -24,7 +24,7 @@ namespace KEngine.Components.DrawableComponents {
                 null,
                 Color.White,
                 GameObject.GlobalRotation,
-                sprite.Center,
+                sprite.Center+sprite.Offset,
                 sprite.Scale*GameObject.GlobalScale,
                 SpriteEffects.None,
                 LayerDepth

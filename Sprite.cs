@@ -12,8 +12,8 @@ namespace KEngine {
         public Sprite(string spriteName, bool scaleTo1x1 = true, Vector2? offset = null, Vector2? scale = null) {
             SpriteName = spriteName;
             Texture = KGame.GetContent<Texture2D>(spriteName);
-            Offset = offset ?? Vector2.Zero;
             Size = new Vector2(Texture.Width, Texture.Height);
+            Offset = (offset ?? Vector2.Zero) * Size;
             Center = Size * 0.5f;
             scale ??= Vector2.One;
             Scale = scaleTo1x1 ? scale.Value / Size : scale.Value;
