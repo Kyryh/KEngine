@@ -25,8 +25,9 @@ namespace KEngine
         public float rotation;
         public Vector2 scale;
 
-        private readonly Component[] components = Array.Empty<Component>();
+        public readonly Component[] components = Array.Empty<Component>();
 
+        private bool loaded = false;
 
         public GameObject(
             string name,
@@ -61,7 +62,13 @@ namespace KEngine
                 }
             }
 
-            KGame.Instance.AddGameObject(this);
+        }
+
+        public void Load() {
+            if (loaded)
+                throw new InvalidOperationException($"GameObject {Name} already loaded");
+            loaded = true;
+            KGame.Instance.LoadGameObject(this);
         }
 
         public Vector2 GlobalPosition {

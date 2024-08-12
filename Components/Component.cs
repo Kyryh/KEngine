@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 
 namespace KEngine.Components {
     public abstract class Component {
@@ -40,10 +39,6 @@ namespace KEngine.Components {
 
         public virtual int UpdateGroup => 0;
 
-        protected Component()
-        {
-            KGame.Instance.AddComponent(this);
-        }
         public virtual void Initialize() {
 
         }

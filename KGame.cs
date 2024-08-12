@@ -54,14 +54,22 @@ namespace KEngine {
                 components: new[] {
                     Camera.CreateMainCamera()
                 }
-            );
+            ).Load();
         }
         protected override void LoadContent() {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
-        internal void AddGameObject(GameObject gameObject) {
+        internal void LoadGameObject(GameObject gameObject) {
             gameObjects.Add(gameObject);
+            foreach (var component in gameObject.components)
+            {
+                AddComponent(component);
+            }
+            foreach (var child in gameObject.children)
+            {
+                LoadGameObject(child);
+            }
         }
 
         internal void AddComponent(Component component) {
