@@ -103,7 +103,7 @@ namespace KEngine {
             var node = componentsToStart.First;
             while (node != null) {
                 var next = node.Next;
-                if (node.Value.Active) {
+                if (node.Value.IsActive) {
                     node.Value.Start();
                     componentsToStart.Remove(node);
                 }
