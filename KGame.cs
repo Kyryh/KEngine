@@ -60,11 +60,11 @@ namespace KEngine {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
-        public void AddGameObject(GameObject gameObject) {
+        internal void AddGameObject(GameObject gameObject) {
             gameObjects.Add(gameObject);
         }
 
-        public void AddComponent(Component component) {
+        internal void AddComponent(Component component) {
             for (int i = 0; i < components.Count; i++)
             {
                 if (components[i].UpdateGroup > component.UpdateGroup) {
@@ -77,17 +77,17 @@ namespace KEngine {
             componentsToStart.AddLast(component);
         }
 
-        public void AddDrawableComponent(DrawableComponent component) {
+        internal void AddDrawableComponent(DrawableComponent component) {
             drawableComponents[component.drawingLayer].Add(component);
         }
 
-        public void RemoveGameObject(GameObject gameObject) {
+        internal void RemoveGameObject(GameObject gameObject) {
             gameObjects.Remove(gameObject);
         }
-        public void RemoveComponent(Component component) {
+        internal void RemoveComponent(Component component) {
             components.Remove(component);
         }
-        public void RemoveDrawableComponent(DrawableComponent component) {
+        internal void RemoveDrawableComponent(DrawableComponent component) {
             drawableComponents[component.drawingLayer].Remove(component);
         }
 
