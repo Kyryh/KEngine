@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using KEngine.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,50 @@ namespace KEngine {
         private float rotation;
         private Vector2 scale;
 
+        Matrix localMatrix;
+        Matrix globalMatrix;
+
+        bool localMatrixDirty = true;
+        bool globalMatrixDirty = true;
+
+        private void SetMatricesDirty(bool worldOnly) {
+            localMatrixDirty |= worldOnly;
+            foreach (var child in children)
+            {
+                child.SetMatricesDirty(true);
+            }
+        }
+
+        Matrix LocalMatrix {
+            get {
+                if (localMatrixDirty) {
+                    localMatrix = Matrix.Identity
+                        * Matrix.CreateScale(Scale.ToVector3())
+                        * Matrix.CreateRotationZ(-Rotation)
+                        * Matrix.CreateTranslation(Position.ToVector3())
+                        ;
+                }
+                return localMatrix;
+            }
+        }
+
+        Matrix GlobalMatrix {
+            get {
+                if (globalMatrixDirty) {
+                    if (Parent != null)
+                        globalMatrix = LocalMatrix * Parent.GlobalMatrix;
+                    else
+                        globalMatrix = LocalMatrix;
+                }
+                return globalMatrix;
+            }
+        }
         public Vector2 Position {
             get {
                 return position;
             }
             set {
+                SetMatricesDirty(false);
                 position = value;
             }
         }
@@ -28,6 +68,7 @@ namespace KEngine {
                 return rotation;
             }
             set {
+                SetMatricesDirty(false);
                 rotation = value;
             }
         }
@@ -37,31 +78,27 @@ namespace KEngine {
                 return scale;
             }
             set {
+                SetMatricesDirty(false);
                 scale = value;
             }
         }
 
         public Vector2 GlobalPosition {
             get {
-                if (Parent == null)
-                    return position;
-                return Parent.GlobalPosition + position;
+                return GlobalMatrix.Translation.ToVector2();
             }
         }
 
         public float GlobalRotation {
             get {
-                if (Parent == null)
-                    return rotation;
-                return Parent.GlobalRotation + rotation;
+                return (float)Math.Atan2(GlobalMatrix.M21, GlobalMatrix.M11);
             }
         }
 
         public Vector2 GlobalScale {
             get {
-                if (Parent == null)
-                    return scale;
-                return Parent.GlobalScale * scale;
+                GlobalMatrix.Decompose(out var scale, out var _, out var _);
+                return scale.ToVector2();
             }
         }
 
