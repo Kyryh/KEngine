@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KEngine.Components;
 using Microsoft.Xna.Framework;
 
@@ -12,18 +13,13 @@ namespace KEngine
         public bool active;
         public bool IsActive {
             get {
-                if (Parent == null)
+                if (Transform.Parent == null)
                     return active;
-                return active && Parent.IsActive;
+                return active && Transform.Parent.GameObject.IsActive;
             }
         }
 
-        public GameObject Parent { get; private set; }
-        public readonly GameObject[] children = Array.Empty<GameObject>();
-
-        public Vector2 position;
-        public float rotation;
-        public Vector2 scale;
+        public Transform Transform { get; private set; }
 
         public readonly Component[] components = Array.Empty<Component>();
 
@@ -40,9 +36,24 @@ namespace KEngine
         ) {
             Name = name;
 
-            this.position = position ?? Vector2.Zero;
-            this.rotation = rotation;
-            this.scale = scale ?? Vector2.One;
+            Transform[] transformChildren;
+            if (children != null) {
+                transformChildren = new Transform[children.Length];
+                for (int i = 0; i < children.Length; i++)
+                {
+                    transformChildren[i] = children[i].Transform;
+                }
+            } else {
+                transformChildren = Array.Empty<Transform>();
+            }
+
+            Transform = new(
+                this,
+                position ?? Vector2.Zero,
+                rotation,
+                scale ?? Vector2.One,
+                transformChildren
+            );
 
             this.active = active;
 
@@ -54,14 +65,6 @@ namespace KEngine
                 }
             }
 
-            if (children != null) {
-                this.children = new GameObject[children.Length];
-                for (int i = 0; i < children.Length; i++) {
-                    this.children[i] = children[i];
-                    this.children[i].Parent = this;
-                }
-            }
-
         }
 
         public void Load() {
@@ -69,30 +72,6 @@ namespace KEngine
                 throw new InvalidOperationException($"GameObject {Name} already loaded");
             loaded = true;
             KGame.Instance.LoadGameObject(this);
-        }
-
-        public Vector2 GlobalPosition {
-            get {
-                if (Parent == null)
-                    return position;
-                return Parent.GlobalPosition + position;
-            }
-        }
-
-        public float GlobalRotation {
-            get {
-                if (Parent == null)
-                    return rotation;
-                return Parent.GlobalRotation + rotation;
-            }
-        }
-
-        public Vector2 GlobalScale {
-            get {
-                if (Parent == null)
-                    return scale;
-                return Parent.GlobalScale * scale;
-            }
         }
 
 
@@ -106,8 +85,8 @@ namespace KEngine
                 }
             }
             if (searchInChildren) {
-                for (int i = 0; i < children.Length; i++) {
-                    if (children[i].TryGetComponent<T>(out var component, activeOnly, true))
+                for (int i = 0; i < Transform.children.Length; i++) {
+                    if (Transform.children[i].GameObject.TryGetComponent<T>(out var component, activeOnly, true))
                         return component;
                 }
             }
@@ -131,8 +110,8 @@ namespace KEngine
                 }
             }
             if (searchInChildren) {
-                for (int i = 0; i < children.Length; i++) {
-                    result.AddRange(children[i].GetComponents<T>(activeOnly, true));
+                for (int i = 0; i < Transform.children.Length; i++) {
+                    result.AddRange(Transform.children[i].GameObject.GetComponents<T>(activeOnly, true));
                 }
             }
             return result;
@@ -143,9 +122,9 @@ namespace KEngine
                 components[i].OnDisable();
                 components[i].OnDestroy();
             }
-            for (int i = 0; i < children.Length; i++)
+            for (int i = 0; i < Transform.children.Length; i++)
             {
-                children[i].Destroy();
+                Transform.children[i].GameObject.Destroy();
             }
             KGame.Instance.RemoveGameObject(this);
         }

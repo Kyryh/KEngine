@@ -21,12 +21,12 @@ namespace KEngine.Components.DrawableComponents {
             Camera.MainCamera.Draw(
                 spriteBatch,
                 sprite.Texture,
-                GameObject.GlobalPosition,
+                Transform.GlobalPosition,
                 null,
                 Color.White,
-                GameObject.GlobalRotation,
+                Transform.GlobalRotation,
                 sprite.Center+sprite.Offset,
-                sprite.Scale*GameObject.GlobalScale,
+                sprite.Scale*Transform.GlobalScale,
                 SpriteEffects.None,
                 LayerDepth
             );

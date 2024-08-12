@@ -37,6 +37,8 @@ namespace KEngine.Components {
             }
         }
 
+        public Transform Transform => GameObject.Transform;
+
         public virtual int UpdateGroup => 0;
 
         public virtual void Initialize() {

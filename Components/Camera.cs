@@ -35,9 +35,9 @@ namespace KEngine.Components {
             ScreenToWorldMatrix = Matrix.Identity
                 * Matrix.CreateTranslation(-screenSize.ToVector3() / 2)
                 * Matrix.CreateScale(1, -1, 1)
-                * Matrix.CreateRotationZ(-GameObject.GlobalRotation)
+                * Matrix.CreateRotationZ(-Transform.GlobalRotation)
                 * Matrix.CreateScale(size / KGame.GetScreenSize().X)
-                * Matrix.CreateTranslation(GameObject.GlobalPosition.ToVector3())
+                * Matrix.CreateTranslation(Transform.GlobalPosition.ToVector3())
                 ;
 
             WorldToScreenMatrix = Matrix.Invert(ScreenToWorldMatrix);
@@ -56,7 +56,7 @@ namespace KEngine.Components {
                 WorldToScreen(position),
                 sourceRectangle,
                 color,
-                rotation - GameObject.GlobalRotation,
+                rotation - Transform.GlobalRotation,
                 origin,
                 scale / size * KGame.GetScreenSize().X,
                 effects,

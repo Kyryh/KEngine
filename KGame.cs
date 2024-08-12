@@ -82,9 +82,9 @@ namespace KEngine {
             {
                 AddComponent(component);
             }
-            foreach (var child in gameObject.children)
+            foreach (var child in gameObject.Transform.children)
             {
-                LoadGameObject(child);
+                LoadGameObject(child.GameObject);
             }
         }
 
