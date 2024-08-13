@@ -23,6 +23,24 @@ namespace KEngine {
         protected string[] drawingLayers = new string[] {
             "Default"
         };
+        private Dictionary<string, DrawingLayerSettings> drawingLayerSettings = new();
+
+        protected void SetDrawingLayersSettings(DrawingLayerSettings defaultSettings, Dictionary<string, DrawingLayerSettings> layersSettings) {
+            foreach (var layer in drawingLayers) {
+                if (!layersSettings.TryGetValue(layer, out var settings)) {
+                    settings = defaultSettings;
+                }
+                drawingLayerSettings[layer] = new DrawingLayerSettings(
+                    settings.SortMode ?? defaultSettings.SortMode ?? SpriteSortMode.Deferred,
+                    settings.BlendState ?? defaultSettings.BlendState,
+                    settings.SamplerState ?? defaultSettings.SamplerState,
+                    settings.DepthStencilState ?? defaultSettings.DepthStencilState,
+                    settings.RasterizerState ?? defaultSettings.RasterizerState,
+                    settings.Effect ?? defaultSettings.Effect
+                );
+            }
+
+        }
 
         protected KGame()
         {
@@ -75,6 +93,7 @@ namespace KEngine {
         protected override void LoadContent() {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            SetDrawingLayersSettings(new DrawingLayerSettings(), new());
         }
         internal void LoadGameObject(GameObject gameObject) {
             gameObjects.Add(gameObject);
@@ -145,7 +164,8 @@ namespace KEngine {
             for (int i = 0; i < drawingLayers.Length; i++)
             {
                 var layer = drawingLayers[i];
-                spriteBatch.Begin();
+                var settings = drawingLayerSettings[layer];
+                spriteBatch.Begin(settings.SortMode.Value, settings.BlendState, settings.SamplerState, settings.DepthStencilState, settings.RasterizerState, settings.Effect);
                 foreach (var component in drawableComponents[layer])
                 {
                     component.Draw(spriteBatch);
@@ -154,5 +174,13 @@ namespace KEngine {
             }
         }
 
+        protected record DrawingLayerSettings(
+            SpriteSortMode? SortMode = null,
+            BlendState BlendState = null,
+            SamplerState SamplerState = null,
+            DepthStencilState DepthStencilState = null,
+            RasterizerState RasterizerState = null,
+            Effect Effect = null
+        );
     }
 }
