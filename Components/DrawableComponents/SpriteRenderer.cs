@@ -12,6 +12,7 @@ namespace KEngine.Components.DrawableComponents {
     public class SpriteRenderer : DrawableComponent {
         public string spriteName;
         Sprite sprite;
+        public int spriteIndex;
         public override void Initialize() {
             base.Initialize();
             sprite = KGame.GetSprite(spriteName);
@@ -22,7 +23,7 @@ namespace KEngine.Components.DrawableComponents {
                 spriteBatch,
                 sprite.Texture,
                 Transform.GlobalPosition,
-                null,
+                sprite.GetSourceRectangle(spriteIndex),
                 Color.White,
                 Transform.GlobalRotation,
                 sprite.Center+sprite.Offset,

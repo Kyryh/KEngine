@@ -7,10 +7,11 @@ namespace KEngine.Drawing
     {
         public string SpriteName { get; }
         public Texture2D Texture { get; }
-        public Vector2 Offset { get; }
-        public Vector2 Size { get; }
-        public Vector2 Center { get; }
-        public Vector2 Scale { get; }
+        public Vector2 Offset { get; init; }
+        public Vector2 Size { get; init; }
+        public Vector2 Center { get; init; }
+        public Vector2 Scale { get; init; }
+        public virtual Rectangle? GetSourceRectangle(int index) => null;
         public Sprite(string spriteName, bool scaleTo1x1 = true, Vector2? offset = null, Vector2? scale = null)
         {
             SpriteName = spriteName;
