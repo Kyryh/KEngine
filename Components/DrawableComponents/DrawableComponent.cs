@@ -10,7 +10,7 @@ namespace KEngine.Components.DrawableComponents
     public abstract class DrawableComponent : Component
     {
         public string drawingLayer = "Default";
-        protected float LayerDepth => 0f;
+        protected virtual float LayerDepth => 0f;
         public override void Initialize() {
             base.Initialize();
             KGame.Instance.AddDrawableComponent(this);
