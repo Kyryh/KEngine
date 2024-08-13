@@ -45,7 +45,7 @@ namespace KEngine {
             return (T)assets[assetName];
         }
 
-        protected static void InitSprites(IEnumerable<Sprite> sprites) {
+        protected static void InitSprites(params Sprite[] sprites) {
             foreach (var sprite in sprites)
             {
                 KGame.sprites[sprite.SpriteName] = sprite;
