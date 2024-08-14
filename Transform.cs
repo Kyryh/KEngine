@@ -9,11 +9,18 @@ using System.Threading.Tasks;
 namespace KEngine {
     public class Transform {
 
+        public delegate void OnPositionChangedHandler(Vector2 oldPosition, Vector2 newPosition);
+        public delegate void OnRotationChangedHandler(float oldRotation, float newRotation);
+        public delegate void OnScaleChangedHandler(Vector2 oldScale, Vector2 newScale);
         public GameObject GameObject { get; private set; }
 
         private Vector2 position;
         private float rotation;
         private Vector2 scale;
+
+        public event OnPositionChangedHandler OnPositionChanged;
+        public event OnRotationChangedHandler OnRotationChanged;
+        public event OnScaleChangedHandler OnScaleChanged;
 
         Matrix localMatrix;
         Matrix globalMatrix;
@@ -61,8 +68,10 @@ namespace KEngine {
                 return position;
             }
             set {
+                var oldValue = position;
                 SetMatricesDirty(false);
                 position = value;
+                OnPositionChanged?.Invoke(oldValue, value);
             }
         }
 
@@ -71,8 +80,10 @@ namespace KEngine {
                 return rotation;
             }
             set {
+                var oldValue = rotation;
                 SetMatricesDirty(false);
                 rotation = value;
+                OnRotationChanged?.Invoke(oldValue, value);
             }
         }
 
@@ -81,8 +92,10 @@ namespace KEngine {
                 return scale;
             }
             set {
+                var oldValue = scale;
                 SetMatricesDirty(false);
                 scale = value;
+                OnScaleChanged?.Invoke(oldValue, value);
             }
         }
 
