@@ -14,9 +14,14 @@ namespace KEngine.Components {
 
         public float size = 10f;
 
+        private static Matrix flipYMatrix = Matrix.CreateScale(1, -1, 1);
 
-        public Matrix WorldToScreenMatrix { private set; get; }
-        public Matrix ScreenToWorldMatrix { private set; get; }
+
+        private Matrix worldToScreenMatrix = Matrix.Identity;
+        public Matrix WorldToScreenMatrix => worldToScreenMatrix;
+
+        private Matrix screenToWorldMatrix = Matrix.Identity;
+        public Matrix ScreenToWorldMatrix => screenToWorldMatrix;
 
         public static Camera CreateMainCamera() {
             if (MainCamera != null)
@@ -32,15 +37,18 @@ namespace KEngine.Components {
         }
         void RecalculateMatrices() {
             var screenSize = KGame.GetScreenSize();
-            ScreenToWorldMatrix = Matrix.Identity
-                * Matrix.CreateTranslation(-screenSize.ToVector3() / 2)
-                * Matrix.CreateScale(1, -1, 1)
-                * Matrix.CreateRotationZ(-Transform.GlobalRotation)
-                * Matrix.CreateScale(size / KGame.GetScreenSize().X)
-                * Matrix.CreateTranslation(Transform.GlobalPosition.ToVector3())
-                ;
 
-            WorldToScreenMatrix = Matrix.Invert(ScreenToWorldMatrix);
+            var centerScreenTranslationMatrix = Matrix.CreateTranslation(-screenSize.ToVector3() / 2);
+            var rotationMatrix = Matrix.CreateRotationZ(-Transform.GlobalRotation);
+            var scaleMatrix = Matrix.CreateScale(size / KGame.GetScreenSize().X);
+            var translationMatrix = Matrix.CreateTranslation(Transform.GlobalPosition.ToVector3());
+
+            Matrix.Multiply(ref centerScreenTranslationMatrix, ref flipYMatrix, out screenToWorldMatrix);
+            Matrix.Multiply(ref screenToWorldMatrix, ref rotationMatrix, out screenToWorldMatrix);
+            Matrix.Multiply(ref screenToWorldMatrix, ref scaleMatrix, out screenToWorldMatrix);
+            Matrix.Multiply(ref screenToWorldMatrix, ref translationMatrix, out screenToWorldMatrix);
+
+            Matrix.Invert(ref screenToWorldMatrix, out worldToScreenMatrix);
         }
         public Vector2 WorldToScreen(Vector2 position) {
             return Vector2.Transform(position, WorldToScreenMatrix);

@@ -32,11 +32,11 @@ namespace KEngine {
         Matrix LocalMatrix {
             get {
                 if (localMatrixDirty) {
-                    localMatrix = Matrix.Identity
-                        * Matrix.CreateScale(Scale.ToVector3())
-                        * Matrix.CreateRotationZ(-Rotation)
-                        * Matrix.CreateTranslation(Position.ToVector3())
-                        ;
+                    var scaleMatrix = Matrix.CreateScale(Scale.ToVector3());
+                    var rotationMatrix = Matrix.CreateRotationZ(-Rotation);
+                    var translationMatrix = Matrix.CreateTranslation(Position.ToVector3());
+                    Matrix.Multiply(ref scaleMatrix, ref rotationMatrix, out localMatrix);
+                    Matrix.Multiply(ref localMatrix, ref translationMatrix, out localMatrix);
                 }
                 return localMatrix;
             }
@@ -45,10 +45,13 @@ namespace KEngine {
         Matrix GlobalMatrix {
             get {
                 if (globalMatrixDirty) {
-                    if (Parent != null)
-                        globalMatrix = LocalMatrix * Parent.GlobalMatrix;
-                    else
+                    if (Parent != null) {
+                        var localMatrix = LocalMatrix;
+                        var parentGlobalMatrix = Parent.GlobalMatrix;
+                        Matrix.Multiply(ref localMatrix, ref parentGlobalMatrix, out globalMatrix);
+                    } else {
                         globalMatrix = LocalMatrix;
+                    }
                 }
                 return globalMatrix;
             }
