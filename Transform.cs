@@ -68,6 +68,8 @@ namespace KEngine {
                 return position;
             }
             set {
+                if (position == value)
+                    return;
                 var oldValue = position;
                 SetMatricesDirty(false);
                 position = value;
@@ -80,6 +82,8 @@ namespace KEngine {
                 return rotation;
             }
             set {
+                if (rotation == value)
+                    return;
                 var oldValue = rotation;
                 SetMatricesDirty(false);
                 rotation = value;
@@ -92,6 +96,8 @@ namespace KEngine {
                 return scale;
             }
             set {
+                if (scale == value)
+                    return;
                 var oldValue = scale;
                 SetMatricesDirty(false);
                 scale = value;
