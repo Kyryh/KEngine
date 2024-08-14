@@ -13,21 +13,36 @@ namespace KEngine.Components.DrawableComponents {
         public string spriteName;
         Sprite sprite;
         public int spriteIndex;
-        public bool flipX;
-        public bool flipY;
+        public bool FlipX {
+            get {
+                return flippedEffect.HasFlag(SpriteEffects.FlipHorizontally);
+            }
+            set {
+                if (value)
+                    flippedEffect |= SpriteEffects.FlipHorizontally;
+                else
+                    flippedEffect &= ~SpriteEffects.FlipHorizontally;
+            }
+        }
+        public bool FlipY {
+            get {
+                return flippedEffect.HasFlag(SpriteEffects.FlipVertically);
+            }
+            set {
+                if (value)
+                    flippedEffect |= SpriteEffects.FlipVertically;
+                else
+                    flippedEffect &= ~SpriteEffects.FlipVertically;
+            }
+        }
+
+        SpriteEffects flippedEffect = SpriteEffects.None;
         public override void Initialize() {
             base.Initialize();
             sprite = KGame.GetSprite(spriteName);
             
         }
         public override void Draw(SpriteBatch spriteBatch) {
-            var effects = SpriteEffects.None;
-
-            if (flipX)
-                effects |= SpriteEffects.FlipHorizontally;
-            if (flipY)
-                effects |= SpriteEffects.FlipVertically;
-
             Camera.MainCamera.Draw(
                 spriteBatch,
                 sprite.Texture,
@@ -37,7 +52,7 @@ namespace KEngine.Components.DrawableComponents {
                 Transform.GlobalRotation,
                 sprite.Center+sprite.Offset,
                 sprite.Scale*Transform.GlobalScale,
-                effects,
+                flippedEffect,
                 LayerDepth
             );
             
