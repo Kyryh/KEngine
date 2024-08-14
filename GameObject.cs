@@ -121,6 +121,7 @@ namespace KEngine
             for (int i = 0; i < components.Length; i++) {
                 components[i].OnDisable();
                 components[i].OnDestroy();
+                KGame.Instance.RemoveComponent(components[i]);
             }
             for (int i = 0; i < Transform.children.Length; i++)
             {
