@@ -10,5 +10,9 @@ namespace KEngine.Extensions {
         public static Vector3 ToVector3(this Vector2 v, float z = 0) {
             return new Vector3(v.X, v.Y, z);
         }
+
+        public static float GetRotation(this Vector2 v) {
+            return (float)Math.Atan2(v.Y, v.X);
+        }
     }
 }

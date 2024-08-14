@@ -25,8 +25,12 @@ namespace KEngine.Extensions {
             spriteBatch.Draw(GetTexture(spriteBatch), position, null, color ?? Color.White, 0, center, size, SpriteEffects.None, 0);
         }
 
-        public static void DrawLine(this SpriteBatch spriteBatch, Vector2 position, float rotation, Color color) {
-            spriteBatch.Draw(GetTexture(spriteBatch), position, null, color, rotation, centerLeft, 1f, SpriteEffects.None, 0);
+        public static void DrawLine(this SpriteBatch spriteBatch, Vector2 position, float length, float rotation = 0f, float width = 1f, Color? color = null) {
+            spriteBatch.Draw(GetTexture(spriteBatch), position, null, color ?? Color.White, rotation, centerLeft, new Vector2(length, width), SpriteEffects.None, 0);
+        }
+
+        public static void DrawLine(this SpriteBatch spriteBatch, Vector2 from, Vector2 to, float width = 1f, Color? color = null) {
+            spriteBatch.DrawLine(from, (int)(to - from).Length(), (to - from).GetRotation(), width, color);
         }
 
     }
