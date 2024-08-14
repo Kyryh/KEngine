@@ -40,8 +40,8 @@ namespace KEngine.Drawing {
             Columns = (int)(Texture.Width / Size.X);
             Rows = (int)(Texture.Height / Size.Y);
 
-            Offset = (offset ?? Vector2.Zero) * Size;
             Center = Size * 0.5f;
+            Offset = Center + (offset ?? Vector2.Zero) * Size;
             scale ??= Vector2.One;
             Scale = scaleTo1x1 ? scale.Value / Size : scale.Value;
         }

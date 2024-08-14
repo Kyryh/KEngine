@@ -50,7 +50,7 @@ namespace KEngine.Components.DrawableComponents {
                 sprite.GetSourceRectangle(spriteIndex),
                 Color.White,
                 Transform.GlobalRotation,
-                sprite.Center+sprite.Offset,
+                sprite.Offset,
                 sprite.Scale*Transform.GlobalScale,
                 flippedEffect,
                 LayerDepth

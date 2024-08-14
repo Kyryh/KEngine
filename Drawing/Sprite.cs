@@ -17,8 +17,8 @@ namespace KEngine.Drawing
             SpriteName = spriteName;
             Texture = KGame.GetContent<Texture2D>(spriteName);
             Size = new Vector2(Texture.Width, Texture.Height);
-            Offset = (offset ?? Vector2.Zero) * Size;
             Center = Size * 0.5f;
+            Offset = Center + (offset ?? Vector2.Zero) * Size;
             scale ??= Vector2.One;
             Scale = scaleTo1x1 ? scale.Value / Size : scale.Value;
         }
