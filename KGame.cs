@@ -141,7 +141,7 @@ namespace KEngine {
             base.Update(gameTime);
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            for (int i = 0; i < componentsToInitialize.Count; i++)
+            while (componentsToInitialize.Count > 0)
             {
                 componentsToInitialize.Dequeue().Initialize();
             }
