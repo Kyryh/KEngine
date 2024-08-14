@@ -30,10 +30,12 @@ namespace KEngine.Components {
             return MainCamera;
         }
 
-
-        public override void Update(float deltaTime) {
-            base.Update(deltaTime);
+        public override void Initialize() {
+            base.Initialize();
             RecalculateMatrices();
+            Transform.OnPositionChanged += (_, _) => RecalculateMatrices();
+            Transform.OnRotationChanged += (_, _) => RecalculateMatrices();
+            Transform.OnScaleChanged += (_, _) => RecalculateMatrices();
         }
         void RecalculateMatrices() {
             var screenSize = KGame.GetScreenSize();
