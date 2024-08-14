@@ -1,6 +1,7 @@
 ﻿using KEngine.Components;
 using KEngine.Components.DrawableComponents;
 using KEngine.Drawing;
+using KEngine.Extensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,6 +20,8 @@ namespace KEngine {
 
         Queue<Component> componentsToInitialize = new();
         LinkedList<Component> componentsToStart = new();
+
+        protected bool debugDrawGameObjectsPosition = false;
 
         protected string[] drawingLayers = new string[] {
             "Default"
@@ -172,6 +175,13 @@ namespace KEngine {
                 }
                 spriteBatch.End();
             }
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            if (debugDrawGameObjectsPosition) {
+                foreach (var gameObject in gameObjects) {
+                    spriteBatch.DrawPoint(Camera.MainCamera.WorldToScreen(gameObject.Transform.GlobalPosition), Color.Gray);
+                }
+            }
+            spriteBatch.End();
         }
 
         protected record DrawingLayerSettings(
