@@ -12,6 +12,8 @@ namespace KEngine.Components.Colliders {
         public float Width { get; init; } = 1f;
         public float Height { get; init; } = 1f;
         public Vector2 Offset { get; init; } = Vector2.Zero;
+        public float Rotation { get; init; } = 0f;
+
         private Vector2[] vertices = new Vector2[4];
         public override Vector2[] Vertices {
             get {
@@ -44,11 +46,17 @@ namespace KEngine.Components.Colliders {
         public override void Initialize() {
             base.Initialize();
             vertices = new []{
-                Offset+new Vector2(Width/2, Height/2),
-                Offset+new Vector2(Width/2, -Height/2),
-                Offset+new Vector2(-Width/2, -Height/2),
-                Offset+new Vector2(-Width/2, Height/2),
+                new Vector2(Width/2, Height/2),
+                new Vector2(Width/2, -Height/2),
+                new Vector2(-Width/2, -Height/2),
+                new Vector2(-Width/2, Height/2),
             };
+            var rotationMatrix = Matrix.CreateRotationZ(Rotation);
+            var translationMatrix = Matrix.CreateTranslation(Offset.ToVector3());
+            Matrix.Multiply(ref rotationMatrix, ref translationMatrix, out var matrix);
+            for (int i = 0; i < vertices.Length; i++) {
+                Vector2.Transform(ref vertices[i], ref matrix, out vertices[i]);
+            }
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch) {
