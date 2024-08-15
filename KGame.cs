@@ -1,4 +1,5 @@
 ﻿using KEngine.Components;
+using KEngine.Components.Colliders;
 using KEngine.Components.DrawableComponents;
 using KEngine.Drawing;
 using KEngine.Extensions;
@@ -17,11 +18,13 @@ namespace KEngine {
         List<GameObject> gameObjects = new();
         List<Component> components = new();
         Dictionary<string, List<DrawableComponent>> drawableComponents = new();
+        List<Collider> colliders = new();
 
         Queue<Component> componentsToInitialize = new();
         LinkedList<Component> componentsToStart = new();
 
         protected bool debugDrawGameObjectsPosition = false;
+        protected bool debugDrawColliders = false;
 
         protected string[] drawingLayers = new string[] {
             "Default"
@@ -127,6 +130,10 @@ namespace KEngine {
             drawableComponents[component.drawingLayer].Add(component);
         }
 
+        internal void AddCollider(Collider collider) {
+            colliders.Add(collider);
+        }
+
         internal void RemoveGameObject(GameObject gameObject) {
             gameObjects.Remove(gameObject);
         }
@@ -135,6 +142,10 @@ namespace KEngine {
         }
         internal void RemoveDrawableComponent(DrawableComponent component) {
             drawableComponents[component.drawingLayer].Remove(component);
+        }
+
+        internal void RemoveCollider(Collider collider) {
+            colliders.Remove(collider);
         }
 
         protected override void Update(GameTime gameTime) {
@@ -179,6 +190,12 @@ namespace KEngine {
             if (debugDrawGameObjectsPosition) {
                 foreach (var gameObject in gameObjects) {
                     spriteBatch.DrawPoint(Camera.MainCamera.WorldToScreen(gameObject.Transform.GlobalPosition), Color.Gray);
+                }
+            }
+            if (debugDrawColliders) {
+                foreach (var collider in colliders)
+                {
+                    collider.DebugDraw(spriteBatch);
                 }
             }
             spriteBatch.End();
