@@ -9,15 +9,19 @@ using System.Threading.Tasks;
 
 namespace KEngine.Components.Colliders {
     public class BoxCollider : Collider {
-        public float width = 1f;
-        public float height = 1f;
-        public Vector2 offset = Vector2.Zero;
-        public IEnumerable<Vector2> Vertices {
+        public float Width { get; init; } = 1f;
+        public float Height { get; init; } = 1f;
+        public Vector2 Offset { get; init; } = Vector2.Zero;
+        private Vector2[] vertices = new Vector2[4];
+        public override Vector2[] Vertices {
             get {
-                yield return Vector2.Transform(offset+new Vector2(width/2, height/2), Transform.GlobalMatrix);
-                yield return Vector2.Transform(offset +new Vector2(-width/2, height/2), Transform.GlobalMatrix);
-                yield return Vector2.Transform(offset +new Vector2(width/2, -height/2), Transform.GlobalMatrix);
-                yield return Vector2.Transform(offset +new Vector2(-width/2, -height/2), Transform.GlobalMatrix);
+                var globalMatrix = Transform.GlobalMatrix;
+                var result = new Vector2[4];
+                Vector2.Transform(ref vertices[0], ref globalMatrix, out result[0]);
+                Vector2.Transform(ref vertices[1], ref globalMatrix, out result[1]);
+                Vector2.Transform(ref vertices[2], ref globalMatrix, out result[2]);
+                Vector2.Transform(ref vertices[3], ref globalMatrix, out result[3]);
+                return result;
             }
         }
 
