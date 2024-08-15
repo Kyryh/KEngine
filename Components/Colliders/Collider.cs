@@ -77,8 +77,20 @@ namespace KEngine.Components.Colliders {
                         maxB = distance;
                 }
 
+                var rightOverlap = minA - maxB;
+                var leftOverlap = minB - maxA;
+
+                bool flipDirection;
+                float distanceAlongAxis;
+
                 // Checks if the vertex projections overlap
-                var distanceAlongAxis = MathF.Max(minA - maxB, minB - maxA);
+                if (rightOverlap > leftOverlap) {
+                    distanceAlongAxis = rightOverlap;
+                    flipDirection = false;
+                } else {
+                    distanceAlongAxis = leftOverlap;
+                    flipDirection = true;
+                }
 
                 // If they don't, the polygons aren't touching
                 if (distanceAlongAxis > 0) {
@@ -90,6 +102,8 @@ namespace KEngine.Components.Colliders {
                 if (distanceAlongAxis > hitInfo.distance) {
                     hitInfo.distance = distanceAlongAxis;
                     hitInfo.direction = axes[i];
+                    if (flipDirection)
+                        hitInfo.direction *= -1;
                 }
 
                 // Check if the vertex projection ranges contain each other
