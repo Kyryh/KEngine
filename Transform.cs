@@ -36,7 +36,7 @@ namespace KEngine {
             }
         }
 
-        Matrix LocalMatrix {
+        internal Matrix LocalMatrix {
             get {
                 if (localMatrixDirty) {
                     var scaleMatrix = Matrix.CreateScale(Scale.ToVector3());
@@ -49,7 +49,7 @@ namespace KEngine {
             }
         }
 
-        Matrix GlobalMatrix {
+        internal Matrix GlobalMatrix {
             get {
                 if (globalMatrixDirty) {
                     if (Parent != null) {
