@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace KEngine.Components.Colliders {
     public abstract class Collider : Component {
+        public bool Static { get; init; }
         public abstract Vector2[] Vertices { get; }
         public abstract Vector2[] Axes { get; }
         public override void Initialize() {
@@ -25,6 +26,9 @@ namespace KEngine.Components.Colliders {
             // https://www.sevenson.com.au/programming/sat/
 
             hitInfo = default;
+            if (colA.Static && colB.Static)
+                return false;
+
             hitInfo.AContainsB = true;
             hitInfo.BContainsA = true;
 
