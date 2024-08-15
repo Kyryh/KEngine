@@ -26,7 +26,7 @@ namespace KEngine.Components.Colliders {
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch) {
-            var vertices = Vertices.ToList();
+            var vertices = Vertices;
             spriteBatch.DrawLine(Camera.MainCamera.WorldToScreen(vertices[0]), Camera.MainCamera.WorldToScreen(vertices[1]), color: Color.LightGreen);
             spriteBatch.DrawLine(Camera.MainCamera.WorldToScreen(vertices[1]), Camera.MainCamera.WorldToScreen(vertices[2]), color: Color.LightGreen);
             spriteBatch.DrawLine(Camera.MainCamera.WorldToScreen(vertices[2]), Camera.MainCamera.WorldToScreen(vertices[3]), color: Color.LightGreen);
