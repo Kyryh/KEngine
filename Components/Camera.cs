@@ -12,7 +12,18 @@ namespace KEngine.Components {
     public class Camera : Component {
         public static Camera MainCamera { get; private set; }
 
-        public float size = 10f;
+        private float size = 10f;
+        public float Size {
+            get {
+                return size;
+            }
+            set {
+                if (value == size)
+                    return;
+                size = value;
+                RecalculateMatrices();
+            }
+        }
 
         private static Matrix flipYMatrix = Matrix.CreateScale(1, -1, 1);
 
