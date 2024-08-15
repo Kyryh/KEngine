@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KEngine.Extensions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KEngine.Components.Colliders.Collider;
 
 namespace KEngine.Components.Colliders {
     public abstract class Collider : Component {
@@ -21,13 +23,30 @@ namespace KEngine.Components.Colliders {
             KGame.Instance.RemoveCollider(this);
         }
 
-        public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
+        public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo, SpriteBatch spriteBatch = null) {
             // SAT (Separating Axis Theorem) algorithm
             // https://www.sevenson.com.au/programming/sat/
 
-            hitInfo = default;
-            if (colA.Static && colB.Static)
+            if (colA.Static && colB.Static) {
+                hitInfo = default;
                 return false;
+            }
+
+            if (colB is CircleCollider)
+                (colA, colB) = (colB, colA);
+
+            if (colA is CircleCollider circleA) {
+                if (colB is CircleCollider circleB) {
+                    return CircleOnCircleCollision(circleA, circleB, out hitInfo);
+                }
+                return CircleOnPolygonCollision(circleA, colB, out hitInfo, spriteBatch);
+            }
+
+            return PolygonOnPolygonCollision(colA, colB, out hitInfo);
+        }
+
+        private static bool PolygonOnPolygonCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
+            hitInfo = default;
 
             hitInfo.AContainsB = true;
             hitInfo.BContainsA = true;
@@ -47,7 +66,7 @@ namespace KEngine.Components.Colliders {
             hitInfo.distance = float.NegativeInfinity;
 
             // Loops over all of the axes
-            for(int i = 0; i < axes.Length; i++) {
+            for (int i = 0; i < axes.Length; i++) {
                 // If it was already encountered, skip it
                 if (!axesEncountered.Add(axes[i]))
                     continue;
@@ -87,7 +106,8 @@ namespace KEngine.Components.Colliders {
                 if (rightOverlap > leftOverlap) {
                     distanceAlongAxis = rightOverlap;
                     flipDirection = false;
-                } else {
+                }
+                else {
                     distanceAlongAxis = leftOverlap;
                     flipDirection = true;
                 }
@@ -110,7 +130,6 @@ namespace KEngine.Components.Colliders {
                 // If they don't, the polygons are certain do not be contained by each other
                 if (maxA < maxB || minA > minB) hitInfo.AContainsB = false;
                 if (maxB < maxA || minB > minA) hitInfo.BContainsA = false;
-
             }
 
             hitInfo.colliderA = colA;
@@ -118,6 +137,132 @@ namespace KEngine.Components.Colliders {
             return true;
         }
 
+        private static bool CircleOnPolygonCollision(CircleCollider circle, Collider col, out HitInfo hitInfo, SpriteBatch spriteBatch = null) {
+            hitInfo = default;
+
+            hitInfo.AContainsB = true;
+            hitInfo.BContainsA = true;
+
+
+            var axes = col.Axes;
+
+            Array.Resize(ref axes, axes.Length + 1);
+
+            float sqrDistanceToNearestVertex = float.PositiveInfinity;
+            var center = circle.Center;
+
+            // Finds the nearest vertex to the circle
+            foreach (var vertex in col.Vertices) {
+                var currentAxis = vertex - center;
+                var distance = currentAxis.LengthSquared();
+                if (distance < sqrDistanceToNearestVertex) {
+                    // Stores the direction to the nearest vertex
+                    // And uses that as an axis
+                    sqrDistanceToNearestVertex = distance;
+                    axes[^1] = currentAxis;
+                }
+            }
+
+            // Normalizes the new axis since it's still a distance
+            Vector2.Normalize(ref axes[^1], out axes[^1]);
+
+            // Stored encountered axes in a set
+            HashSet<Vector2> axesEncountered = new();
+
+            // Default value for hitinfo distance
+            hitInfo.distance = float.NegativeInfinity;
+
+            // Loops over all of the axes
+            for (int i = 0; i < axes.Length; i++) {
+                // If it was already encountered, skip it
+                if (!axesEncountered.Add(axes[i]))
+                    continue;
+
+                Vector2.Dot(ref center, ref axes[i], out var centerDistance);
+
+                // Calculates circle's projection by offsetting its center left and right
+                float minA = centerDistance - circle.ActualRadius;
+                float maxA = centerDistance + circle.ActualRadius;
+
+                float minB = float.PositiveInfinity;
+                float maxB = float.NegativeInfinity;
+
+                // Same thing as before, but with the second collider
+                for (int j = 0; j < col.Vertices.Length; j++) {
+                    Vector2.Dot(ref col.Vertices[j], ref axes[i], out float distance);
+                    if (distance < minB)
+                        minB = distance;
+                    if (distance > maxB)
+                        maxB = distance;
+                }
+
+                var rightOverlap = minA - maxB;
+                var leftOverlap = minB - maxA;
+
+                bool flipDirection;
+                float distanceAlongAxis;
+
+                // Checks if the vertex projections overlap
+                if (rightOverlap > leftOverlap) {
+                    distanceAlongAxis = rightOverlap;
+                    flipDirection = false;
+                }
+                else {
+                    distanceAlongAxis = leftOverlap;
+                    flipDirection = true;
+                }
+
+                // If they don't, the polygons aren't touching
+                if (distanceAlongAxis > 0) {
+                    return false;
+                }
+
+                // Check how much the vertex projections are overlapping
+                // And stores the smallest overlap with its distance
+                if (distanceAlongAxis > hitInfo.distance) {
+                    hitInfo.distance = distanceAlongAxis;
+                    hitInfo.direction = axes[i];
+                    if (flipDirection)
+                        hitInfo.direction *= -1;
+                }
+
+                // Check if the vertex projection ranges contain each other
+                // If they don't, the polygons are certain do not be contained by each other
+                if (maxA < maxB || minA > minB) hitInfo.AContainsB = false;
+                if (maxB < maxA || minB > minA) hitInfo.BContainsA = false;
+            }
+
+            hitInfo.colliderA = circle;
+            hitInfo.colliderB = col;
+            return true;
+        }
+        private static bool CircleOnCircleCollision(CircleCollider circleA, CircleCollider circleB, out HitInfo hitInfo) {
+            var radiusSum = circleA.ActualRadius + circleB.ActualRadius;
+            hitInfo = default;
+            var x = circleA.Transform.GlobalPosition.X - circleB.Transform.GlobalPosition.X;
+            var y = circleA.Transform.GlobalPosition.Y - circleB.Transform.GlobalPosition.Y;
+            var distanceSqr = x * x + y * y;
+            if (distanceSqr > radiusSum * radiusSum) {
+                return false;
+            }
+
+
+            hitInfo.colliderA = circleA;
+            hitInfo.colliderB = circleB;
+
+            hitInfo.direction = circleB.Transform.GlobalPosition - circleA.Transform.GlobalPosition;
+
+
+            Vector2.Normalize(ref hitInfo.direction, out hitInfo.direction);
+
+            var distance = MathF.Sqrt(distanceSqr);
+
+
+            hitInfo.AContainsB = circleB.ActualRadius <= circleA.ActualRadius && distance <= circleB.ActualRadius - circleA.ActualRadius;
+            hitInfo.BContainsA = circleA.ActualRadius <= circleB.ActualRadius && distance <= circleA.ActualRadius - circleB.ActualRadius;
+
+            return true;
+        }
         public virtual void DebugDraw(SpriteBatch spriteBatch) {
 
         }
