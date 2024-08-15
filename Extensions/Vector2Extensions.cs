@@ -14,5 +14,12 @@ namespace KEngine.Extensions {
         public static float GetRotation(this Vector2 v) {
             return (float)Math.Atan2(v.Y, v.X);
         }
+
+        public static Vector2 Normalized(this Vector2 v) {
+            if (v == Vector2.Zero)
+                return v;
+            v.Normalize();
+            return v;
+        }
     }
 }
