@@ -193,8 +193,7 @@ namespace KEngine {
                 }
             }
             if (debugDrawColliders) {
-                foreach (var collider in colliders)
-                {
+                foreach (var collider in colliders) {
                     collider.DebugDraw(spriteBatch);
                 }
             }
