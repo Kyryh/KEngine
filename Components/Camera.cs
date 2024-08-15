@@ -64,11 +64,13 @@ namespace KEngine.Components {
             Matrix.Invert(ref screenToWorldMatrix, out worldToScreenMatrix);
         }
         public Vector2 WorldToScreen(Vector2 position) {
-            return Vector2.Transform(position, WorldToScreenMatrix);
+            Vector2.Transform(ref position, ref worldToScreenMatrix, out var result);
+            return result;
         }
 
         public Vector2 ScreenToWorld(Vector2 position) {
-            return Vector2.Transform(position, ScreenToWorldMatrix);
+            Vector2.Transform(ref position, ref screenToWorldMatrix, out var result);
+            return result;
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth) {
