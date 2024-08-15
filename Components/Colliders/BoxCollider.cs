@@ -14,51 +14,67 @@ namespace KEngine.Components.Colliders {
         public Vector2 Offset { get; init; } = Vector2.Zero;
         public float Rotation { get; init; } = 0f;
 
-        private Vector2[] vertices = new Vector2[4];
+        private bool recalculateVertices = true;
+        private bool recalculateAxes = true;
+        private readonly Vector2[] vertices = new Vector2[4];
+        private readonly Vector2[] globalVertices = new Vector2[4];
         public override Vector2[] Vertices {
             get {
-                var globalMatrix = Transform.GlobalMatrix;
-                var result = new Vector2[4];
-                Vector2.Transform(ref vertices[0], ref globalMatrix, out result[0]);
-                Vector2.Transform(ref vertices[1], ref globalMatrix, out result[1]);
-                Vector2.Transform(ref vertices[2], ref globalMatrix, out result[2]);
-                Vector2.Transform(ref vertices[3], ref globalMatrix, out result[3]);
-                return result;
+                if (recalculateVertices) {
+                    recalculateVertices = false;
+                    var globalMatrix = Transform.GlobalMatrix;
+                    Vector2.Transform(ref vertices[0], ref globalMatrix, out globalVertices[0]);
+                    Vector2.Transform(ref vertices[1], ref globalMatrix, out globalVertices[1]);
+                    Vector2.Transform(ref vertices[2], ref globalMatrix, out globalVertices[2]);
+                    Vector2.Transform(ref vertices[3], ref globalMatrix, out globalVertices[3]);
+                }
+                return globalVertices;
             }
         }
 
+        private Vector2[] axes = new Vector2[2];
         public override Vector2[] Axes {
             get {
-                var rotationMatrix = Matrix.CreateRotationZ(-Transform.GlobalRotation);
-                var result = new Vector2[2];
-                var axis = GameConstants.Vector2.Up;
+                if (recalculateAxes) {
+                    recalculateAxes = false;
+                    var rotationMatrix = Matrix.CreateRotationZ(-Transform.GlobalRotation);
+                    var axis = GameConstants.Vector2.Up;
 
-                Vector2.Transform(ref axis, ref rotationMatrix, out result[0]);
-                Vector2.Normalize(ref result[0], out result[0]);
+                    Vector2.Transform(ref axis, ref rotationMatrix, out axes[0]);
+                    Vector2.Normalize(ref axes[0], out axes[0]);
 
-                result[1].X = result[0].Y;
-                result[1].Y = -result[0].X;
-
-                return result;
+                    axes[1].X = axes[0].Y;
+                    axes[1].Y = -axes[0].X;
+                }
+                return axes;
             }
         }
 
         public override void Initialize() {
             base.Initialize();
-            vertices = new []{
-                new Vector2(Width/2, Height/2),
-                new Vector2(Width/2, -Height/2),
-                new Vector2(-Width/2, -Height/2),
-                new Vector2(-Width/2, Height/2),
-            };
+            vertices[0] = new Vector2(Width / 2, Height / 2);
+            vertices[1] = new Vector2(Width / 2, -Height / 2);
+            vertices[2] = new Vector2(-Width / 2, -Height / 2);
+            vertices[3] = new Vector2(-Width / 2, Height / 2);
+
             var rotationMatrix = Matrix.CreateRotationZ(Rotation);
             var translationMatrix = Matrix.CreateTranslation(Offset.ToVector3());
             Matrix.Multiply(ref rotationMatrix, ref translationMatrix, out var matrix);
             for (int i = 0; i < vertices.Length; i++) {
                 Vector2.Transform(ref vertices[i], ref matrix, out vertices[i]);
             }
+
+            Transform.OnPositionChanged += (_, _) => RecalculateNeeded();
+            Transform.OnRotationChanged += (_, _) => RecalculateNeeded();
+            Transform.OnScaleChanged += (_, _) => RecalculateNeeded();
+
+
         }
 
+        void RecalculateNeeded() {
+            recalculateVertices = true;
+            recalculateAxes = true;
+        }
         public override void DebugDraw(SpriteBatch spriteBatch) {
             var vertices = Vertices;
             spriteBatch.DrawLine(Camera.MainCamera.WorldToScreen(vertices[0]), Camera.MainCamera.WorldToScreen(vertices[1]), color: Color.LightGreen);
