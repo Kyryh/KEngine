@@ -205,7 +205,9 @@ namespace KEngine {
             }
 
             for (int i = 0; i < colliders.Count; i++) {
+                if (!colliders[i].IsActive) continue;
                 for (int j = i+1; j < colliders.Count; j++) {
+                    if (!colliders[j].IsActive) continue;
                     if (Collider.CheckCollision(colliders[i], colliders[j], out var hitInfo)) {
                         if (!hitInfo.colliderA.IsTrigger && !hitInfo.colliderB.IsTrigger) {
                             if (hitInfo.colliderA.IsStatic) {
@@ -235,7 +237,8 @@ namespace KEngine {
                 spriteBatch.Begin(settings.SortMode.Value, settings.BlendState, settings.SamplerState, settings.DepthStencilState, settings.RasterizerState, settings.Effect);
                 foreach (var component in drawableComponents[layer])
                 {
-                    component.Draw(spriteBatch);
+                    if (component.IsActive)
+                        component.Draw(spriteBatch);
                 }
                 spriteBatch.End();
             }
