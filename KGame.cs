@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace KEngine {
     public abstract class KGame : Game {
@@ -30,6 +31,10 @@ namespace KEngine {
             "Default"
         };
         private Dictionary<string, DrawingLayerSettings> drawingLayerSettings = new();
+
+        public delegate void SceneLoader();
+
+        private OrderedDictionary scenes = new();
 
         protected void SetDrawingLayersSettings(DrawingLayerSettings defaultSettings, Dictionary<string, DrawingLayerSettings> layersSettings) {
             foreach (var layer in drawingLayers) {
@@ -93,9 +98,37 @@ namespace KEngine {
                 "Main Camera",
                 components: new[] {
                     Camera.CreateMainCamera()
-                }
+                },
+                dontDestroyOnLoad: true
             ).Load();
+            LoadScene(0);
         }
+        public void LoadScene(int index) {
+            LoadScene((SceneLoader)scenes[index]);
+        }
+        public void LoadScene(string name) {
+            LoadScene((SceneLoader)scenes[name]);
+        }
+
+        protected void SetScenes(params (string, SceneLoader)[] scenes) {
+            foreach (var scene in scenes)
+            {
+                this.scenes[scene.Item1] = scene.Item2;
+            }
+        }
+        private void LoadScene(SceneLoader sceneLoader) {
+            int i = 0;
+            while (i < gameObjects.Count) {
+                if (gameObjects[i].CanDestroy) {
+                    gameObjects[i].Destroy();
+                } else {
+                    i++;
+                }
+            }
+            gameObjects.RemoveAll(go => !go.DontDestroyOnLoad);
+            sceneLoader();
+        }
+
         protected override void LoadContent() {
             base.LoadContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);

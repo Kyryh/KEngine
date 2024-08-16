@@ -19,6 +19,15 @@ namespace KEngine
             }
         }
 
+        public bool DontDestroyOnLoad { get; set; }
+
+        public bool CanDestroy {
+            get {
+                if (Transform.Parent == null)
+                    return !DontDestroyOnLoad;
+                return Transform.Parent.GameObject.CanDestroy;
+            }
+        }
         public Transform Transform { get; private set; }
 
         public readonly Component[] components = Array.Empty<Component>();
@@ -32,7 +41,8 @@ namespace KEngine
             Vector2? scale = null,
             bool active = true,
             Component[] components = null,
-            GameObject[] children = null
+            GameObject[] children = null,
+            bool dontDestroyOnLoad = false
         ) {
             Name = name;
 
@@ -64,6 +74,8 @@ namespace KEngine
                     this.components[i].GameObject = this;
                 }
             }
+
+            DontDestroyOnLoad = dontDestroyOnLoad;
 
         }
 
