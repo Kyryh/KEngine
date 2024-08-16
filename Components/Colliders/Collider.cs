@@ -8,7 +8,7 @@ namespace KEngine.Components.Colliders {
     public abstract class Collider : Component {
         public delegate void OnCollisionHandler(Collider other);
         public event OnCollisionHandler OnCollision;
-        public bool Static { get; init; }
+        public bool IsStatic { get; init; }
         public abstract Vector2[] Vertices { get; }
         public abstract void Axes(Collider other, out Vector2[] axes);
         public override void Initialize() {
@@ -25,7 +25,7 @@ namespace KEngine.Components.Colliders {
             // SAT (Separating Axis Theorem) algorithm
             // https://www.sevenson.com.au/programming/sat/
 
-            if (colA.Static && colB.Static) {
+            if (colA.IsStatic && colB.IsStatic) {
                 hitInfo = default;
                 return false;
             }

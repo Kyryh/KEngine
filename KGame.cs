@@ -174,9 +174,9 @@ namespace KEngine {
             for (int i = 0; i < colliders.Count; i++) {
                 for (int j = i+1; j < colliders.Count; j++) {
                     if (Collider.CheckCollision(colliders[i], colliders[j], out var hitInfo)) {
-                        if (hitInfo.colliderA.Static) {
+                        if (hitInfo.colliderA.IsStatic) {
                             hitInfo.colliderB.Transform.Position += hitInfo.direction * hitInfo.distance;
-                        } else if (hitInfo.colliderB.Static) {
+                        } else if (hitInfo.colliderB.IsStatic) {
                             hitInfo.colliderA.Transform.Position -= hitInfo.direction * hitInfo.distance;
                         } else {
                             hitInfo.colliderB.Transform.Position += hitInfo.direction * (hitInfo.distance * 0.5f);
