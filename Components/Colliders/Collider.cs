@@ -87,7 +87,7 @@ namespace KEngine.Components.Colliders {
                 }
 
                 // If they don't, the polygons aren't touching
-                if (distanceAlongAxis > 0) {
+                if (distanceAlongAxis >= 0) {
                     return false;
                 }
 
