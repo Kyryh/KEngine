@@ -22,6 +22,15 @@ namespace KEngine.Components.Colliders {
             KGame.Instance.RemoveCollider(this);
         }
 
+        public static void CheckCollision(Collider col, out List<HitInfo> hitInfoList) {
+            hitInfoList = new();
+            for (int i = 0; i < KGame.Instance.colliders.Count; i++) {
+                if (!KGame.Instance.colliders[i].IsActive) continue;
+                if (CheckCollision(col, KGame.Instance.colliders[i], out var hitInfo)) {
+                    hitInfoList.Add(hitInfo);
+                }
+            }
+        }
         public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
 
             if (colA.IsStatic && colB.IsStatic) {

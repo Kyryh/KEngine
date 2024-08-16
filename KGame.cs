@@ -19,7 +19,7 @@ namespace KEngine {
         List<GameObject> gameObjects = new();
         List<Component> components = new();
         Dictionary<string, List<DrawableComponent>> drawableComponents = new();
-        List<Collider> colliders = new();
+        internal List<Collider> colliders = new();
 
         Queue<Component> componentsToInitialize = new();
         LinkedList<Component> componentsToStart = new();
