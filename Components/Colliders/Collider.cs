@@ -22,7 +22,7 @@ namespace KEngine.Components.Colliders {
             KGame.Instance.RemoveCollider(this);
         }
 
-        public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo, SpriteBatch spriteBatch = null) {
+        public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
 
             if (colA.IsStatic && colB.IsStatic) {
                 hitInfo = default;
