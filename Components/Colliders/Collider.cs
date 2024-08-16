@@ -31,14 +31,10 @@ namespace KEngine.Components.Colliders {
                 return false;
             }
 
-            if (colA is CircleCollider circleA && colB is CircleCollider circleB) {
-                return CircleOnCircleCollision(circleA, circleB, out hitInfo);
-            }
-
-            return SATPolygonCollision(colA, colB, out hitInfo);
+            return SATCollision(colA, colB, out hitInfo);
         }
 
-        private static bool SATPolygonCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
+        private static bool SATCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
             hitInfo = default;
 
             hitInfo.AContainsB = true;
@@ -108,35 +104,6 @@ namespace KEngine.Components.Colliders {
 
             hitInfo.colliderA = colA;
             hitInfo.colliderB = colB;
-            return true;
-        }
-
-        
-        private static bool CircleOnCircleCollision(CircleCollider circleA, CircleCollider circleB, out HitInfo hitInfo) {
-            var radiusSum = circleA.ActualRadius + circleB.ActualRadius;
-            hitInfo = default;
-            var x = circleA.Transform.GlobalPosition.X - circleB.Transform.GlobalPosition.X;
-            var y = circleA.Transform.GlobalPosition.Y - circleB.Transform.GlobalPosition.Y;
-            var distanceSqr = x * x + y * y;
-            if (distanceSqr > radiusSum * radiusSum) {
-                return false;
-            }
-
-
-            hitInfo.colliderA = circleA;
-            hitInfo.colliderB = circleB;
-
-            hitInfo.direction = circleB.Transform.GlobalPosition - circleA.Transform.GlobalPosition;
-
-
-            Vector2.Normalize(ref hitInfo.direction, out hitInfo.direction);
-
-            var distance = MathF.Sqrt(distanceSqr);
-
-
-            hitInfo.AContainsB = circleB.ActualRadius <= circleA.ActualRadius && distance <= circleB.ActualRadius - circleA.ActualRadius;
-            hitInfo.BContainsA = circleA.ActualRadius <= circleB.ActualRadius && distance <= circleA.ActualRadius - circleB.ActualRadius;
-
             return true;
         }
 

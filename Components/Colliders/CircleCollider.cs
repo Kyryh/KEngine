@@ -35,7 +35,7 @@ namespace KEngine.Components.Colliders {
                 return actualRadius;
             }
         }
-        public override Vector2[] Vertices => null;
+        public override Vector2[] Vertices => new[] { Center };
 
         public override void Axes(Collider other, out Vector2[] axes) {
             axes = new Vector2[1];
