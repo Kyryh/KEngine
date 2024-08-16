@@ -1,15 +1,13 @@
-﻿using KEngine.Extensions;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static KEngine.Components.Colliders.Collider;
 
 namespace KEngine.Components.Colliders {
     public abstract class Collider : Component {
+        public delegate void OnCollisionHandler(Collider other);
+        public event OnCollisionHandler OnCollision;
         public bool Static { get; init; }
         public abstract Vector2[] Vertices { get; }
         public abstract void Axes(Collider other, out Vector2[] axes);
@@ -155,6 +153,11 @@ namespace KEngine.Components.Colliders {
 
             return (min, max);
         }
+
+        internal void CallOnCollision(Collider other) {
+            OnCollision?.Invoke(other);
+        }
+
         public virtual void DebugDraw(SpriteBatch spriteBatch) {
 
         }
