@@ -23,8 +23,6 @@ namespace KEngine.Components.Colliders {
         }
 
         public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo, SpriteBatch spriteBatch = null) {
-            // SAT (Separating Axis Theorem) algorithm
-            // https://www.sevenson.com.au/programming/sat/
 
             if (colA.IsStatic && colB.IsStatic) {
                 hitInfo = default;
@@ -35,6 +33,9 @@ namespace KEngine.Components.Colliders {
         }
 
         private static bool SATCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
+            // SAT (Separating Axis Theorem) algorithm
+            // https://www.sevenson.com.au/programming/sat/
+
             hitInfo = default;
 
             hitInfo.AContainsB = true;
