@@ -174,14 +174,15 @@ namespace KEngine {
             for (int i = 0; i < colliders.Count; i++) {
                 for (int j = i+1; j < colliders.Count; j++) {
                     if (Collider.CheckCollision(colliders[i], colliders[j], out var hitInfo)) {
-                        if (hitInfo.colliderA.IsStatic) {
-                            hitInfo.colliderB.Transform.Position += hitInfo.direction * hitInfo.distance;
-                        } else if (hitInfo.colliderB.IsStatic) {
-                            hitInfo.colliderA.Transform.Position -= hitInfo.direction * hitInfo.distance;
-                        } else {
-                            hitInfo.colliderB.Transform.Position += hitInfo.direction * (hitInfo.distance * 0.5f);
-                            hitInfo.colliderA.Transform.Position -= hitInfo.direction * (hitInfo.distance * 0.5f);
-
+                        if (!hitInfo.colliderA.IsTrigger && !hitInfo.colliderB.IsTrigger) {
+                            if (hitInfo.colliderA.IsStatic) {
+                                hitInfo.colliderB.Transform.Position += hitInfo.direction * hitInfo.distance;
+                            } else if (hitInfo.colliderB.IsStatic) {
+                                hitInfo.colliderA.Transform.Position -= hitInfo.direction * hitInfo.distance;
+                            } else {
+                                hitInfo.colliderB.Transform.Position += hitInfo.direction * (hitInfo.distance * 0.5f);
+                                hitInfo.colliderA.Transform.Position -= hitInfo.direction * (hitInfo.distance * 0.5f);
+                            }
                         }
                         hitInfo.colliderA.CallOnCollision(hitInfo.colliderB);
                         hitInfo.colliderB.CallOnCollision(hitInfo.colliderA);

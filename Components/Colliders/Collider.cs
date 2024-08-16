@@ -9,6 +9,7 @@ namespace KEngine.Components.Colliders {
         public delegate void OnCollisionHandler(Collider other);
         public event OnCollisionHandler OnCollision;
         public bool IsStatic { get; init; }
+        public bool IsTrigger { get; init; }
         public abstract Vector2[] Vertices { get; }
         public abstract void Axes(Collider other, out Vector2[] axes);
         public override void Initialize() {
