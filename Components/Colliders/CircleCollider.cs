@@ -37,7 +37,27 @@ namespace KEngine.Components.Colliders {
         }
         public override Vector2[] Vertices => null;
 
-        public override Vector2[] Axes => null;
+        public override void Axes(Collider other, out Vector2[] axes) {
+            axes = new Vector2[1];
+
+            float sqrDistanceToNearestVertex = float.PositiveInfinity;
+            var center = Center;
+
+            // Finds the nearest vertex to the circle
+            foreach (var vertex in other.Vertices) {
+                var currentAxis = vertex - center;
+                var distance = currentAxis.LengthSquared();
+                if (distance < sqrDistanceToNearestVertex) {
+                    // Stores the direction to the nearest vertex
+                    // And uses that as an axis
+                    sqrDistanceToNearestVertex = distance;
+                    axes[0] = currentAxis;
+                }
+            }
+
+            // Normalizes the new axis since it's still a distance
+            Vector2.Normalize(ref axes[0], out axes[0]);
+        }
 
         public override void Initialize() {
             base.Initialize();
@@ -51,6 +71,19 @@ namespace KEngine.Components.Colliders {
 
         public bool Contains(Vector2 point) {
             return (Center - point).LengthSquared() <= ActualRadius*ActualRadius;
+        }
+
+        protected override (float, float) ProjectToAxis(ref Vector2 axis) {
+
+            var center = Center;
+
+            Vector2.Dot(ref center, ref axis, out var centerDistance);
+
+            // Calculates circle's projection by offsetting its center left and right
+            float min = centerDistance - ActualRadius;
+            float max = centerDistance + ActualRadius;
+
+            return (min, max);
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch) {

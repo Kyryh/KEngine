@@ -33,21 +33,19 @@ namespace KEngine.Components.Colliders {
         }
 
         private Vector2[] axes = new Vector2[2];
-        public override Vector2[] Axes {
-            get {
-                if (recalculateAxes) {
-                    recalculateAxes = false;
-                    var rotationMatrix = Matrix.CreateRotationZ(-Transform.GlobalRotation);
-                    var axis = GameConstants.Vector2.Up;
+        public override void Axes(Collider other, out Vector2[] result) {
+            if (recalculateAxes) {
+                recalculateAxes = false;
+                var rotationMatrix = Matrix.CreateRotationZ(-Transform.GlobalRotation);
+                var axis = GameConstants.Vector2.Up;
 
-                    Vector2.Transform(ref axis, ref rotationMatrix, out axes[0]);
-                    Vector2.Normalize(ref axes[0], out axes[0]);
+                Vector2.Transform(ref axis, ref rotationMatrix, out axes[0]);
+                Vector2.Normalize(ref axes[0], out axes[0]);
 
-                    axes[1].X = axes[0].Y;
-                    axes[1].Y = -axes[0].X;
-                }
-                return axes;
+                axes[1].X = axes[0].Y;
+                axes[1].Y = -axes[0].X;
             }
+            result = axes;
         }
 
         public override void Initialize() {
