@@ -94,14 +94,18 @@ namespace KEngine {
             {
                 drawableComponents[layer] = new();
             }
-            new GameObject(
+            CreateMainCamera().Load();
+            LoadScene(0);
+        }
+
+        protected virtual GameObject CreateMainCamera() {
+            return new GameObject(
                 "Main Camera",
                 components: new[] {
                     Camera.CreateMainCamera()
                 },
                 dontDestroyOnLoad: true
-            ).Load();
-            LoadScene(0);
+            );
         }
         public void LoadScene(int index) {
             LoadScene((SceneLoader)scenes[index]);
