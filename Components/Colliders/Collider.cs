@@ -7,7 +7,7 @@ using System.Text;
 
 namespace KEngine.Components.Colliders {
     public abstract class Collider : Component {
-        public delegate void OnCollisionHandler(Collider other);
+        public delegate void OnCollisionHandler(Collider other, HitInfo hitInfo);
         public event OnCollisionHandler OnCollision;
         public bool IsStatic { get; init; }
         public bool IsTrigger { get; init; }
@@ -148,8 +148,8 @@ namespace KEngine.Components.Colliders {
             return (min, max);
         }
 
-        internal void CallOnCollision(Collider other) {
-            OnCollision?.Invoke(other);
+        internal void CallOnCollision(Collider other, ref HitInfo hitInfo) {
+            OnCollision?.Invoke(other, hitInfo);
         }
 
         public virtual void DebugDraw(SpriteBatch spriteBatch) {

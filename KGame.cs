@@ -224,8 +224,8 @@ namespace KEngine {
                                 hitInfo.colliderA.Transform.Position -= hitInfo.direction * (hitInfo.distance * 0.5f);
                             }
                         }
-                        hitInfo.colliderA.CallOnCollision(hitInfo.colliderB);
-                        hitInfo.colliderB.CallOnCollision(hitInfo.colliderA);
+                        hitInfo.colliderA.CallOnCollision(hitInfo.colliderB, ref hitInfo);
+                        hitInfo.colliderB.CallOnCollision(hitInfo.colliderA, ref hitInfo);
                     }
                 }
             }
