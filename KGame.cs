@@ -201,7 +201,8 @@ namespace KEngine {
             }
 
             foreach (var component in components) {
-                component.Update(deltaTime);
+                if (component.IsActive)
+                    component.Update(deltaTime);
             }
 
             for (int i = 0; i < colliders.Count; i++) {
