@@ -4,7 +4,7 @@ using System;
 namespace KEngine.Components {
     public abstract class Component {
 
-        protected bool active;
+        protected bool active = true;
 
         public bool Active {
             get {
