@@ -225,6 +225,7 @@ namespace KEngine {
                             }
                         }
                         hitInfo.colliderA.CallOnCollision(hitInfo.colliderB, ref hitInfo);
+                        hitInfo.direction = -hitInfo.direction;
                         hitInfo.colliderB.CallOnCollision(hitInfo.colliderA, ref hitInfo);
                     }
                 }
