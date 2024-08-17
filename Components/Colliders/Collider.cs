@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KEngine.Components.Colliders {
@@ -10,6 +11,8 @@ namespace KEngine.Components.Colliders {
         public event OnCollisionHandler OnCollision;
         public bool IsStatic { get; init; }
         public bool IsTrigger { get; init; }
+        public string Layer { get; init; } = "Default";
+        static HashSet<(string, string)> collisionMatrix = new(new[] { ("Default", "Default") });
         public abstract Vector2[] Vertices { get; }
         public abstract void Axes(Collider other, out Vector2[] axes);
         public override void Initialize() {
@@ -20,6 +23,14 @@ namespace KEngine.Components.Colliders {
         public override void OnDestroy() {
             base.OnDestroy();
             KGame.Instance.RemoveCollider(this);
+        }
+
+        public static void AddToCollisionMatrix(params (string, string)[] collisionLayers) {
+            foreach (var layer in collisionLayers)
+            {
+                collisionMatrix.Add(layer);
+                collisionMatrix.Add((layer.Item2, layer.Item1));
+            }
         }
 
         public static void CheckCollision(Collider col, out List<HitInfo> hitInfoList) {
@@ -34,6 +45,11 @@ namespace KEngine.Components.Colliders {
         public static bool CheckCollision(Collider colA, Collider colB, out HitInfo hitInfo) {
 
             if (colA.IsStatic && colB.IsStatic) {
+                hitInfo = default;
+                return false;
+            }
+
+            if (!collisionMatrix.Contains((colA.Layer, colB.Layer))) {
                 hitInfo = default;
                 return false;
             }
