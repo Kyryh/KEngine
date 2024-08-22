@@ -16,6 +16,9 @@ namespace KEngine {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
+        SceneLoader sceneToLoad = null;
+        SceneLoader lastScene = null;
+
         List<GameObject> gameObjects = new();
         List<Component> components = new();
         Dictionary<string, List<DrawableComponent>> drawableComponents = new();
@@ -108,10 +111,10 @@ namespace KEngine {
             );
         }
         public void LoadScene(int index) {
-            LoadScene((SceneLoader)scenes[index]);
+            sceneToLoad = (SceneLoader)scenes[index];
         }
         public void LoadScene(string name) {
-            LoadScene((SceneLoader)scenes[name]);
+            sceneToLoad = (SceneLoader)scenes[name];
         }
 
         protected void SetScenes(params (string, SceneLoader)[] scenes) {
@@ -131,6 +134,11 @@ namespace KEngine {
             }
             gameObjects.RemoveAll(go => !go.DontDestroyOnLoad);
             sceneLoader();
+            lastScene = sceneLoader;
+        }
+
+        public void ReloadScene() {
+            sceneToLoad = lastScene;
         }
 
         protected override void LoadContent() {
@@ -229,6 +237,11 @@ namespace KEngine {
                         hitInfo.colliderA.CallOnCollision(hitInfo.colliderB, ref hitInfo);
                     }
                 }
+            }
+
+            if (sceneToLoad != null) {
+                LoadScene(sceneToLoad);
+                sceneToLoad = null;
             }
 
         }
