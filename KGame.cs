@@ -16,8 +16,8 @@ namespace KEngine {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
 
-        SceneLoader sceneToLoad = null;
-        int lastScene = 0;
+        static SceneLoader sceneToLoad = null;
+        static int lastScene = 0;
 
         List<GameObject> gameObjects = new();
         List<Component> components = new();
@@ -37,7 +37,7 @@ namespace KEngine {
 
         public delegate void SceneLoader();
 
-        private OrderedDictionary scenes = new();
+        private static OrderedDictionary scenes = new();
 
         protected void SetDrawingLayersSettings(DrawingLayerSettings defaultSettings, Dictionary<string, DrawingLayerSettings> layersSettings) {
             foreach (var layer in drawingLayers) {
@@ -110,11 +110,11 @@ namespace KEngine {
                 dontDestroyOnLoad: true
             );
         }
-        public void LoadScene(int index) {
+        public static void LoadScene(int index) {
             lastScene = index;
             sceneToLoad = (SceneLoader)scenes[index];
         }
-        public void LoadScene(string name) {
+        public static void LoadScene(string name) {
             lastScene = scenes.IndexOf(name);
             sceneToLoad = (SceneLoader)scenes[name];
         }
@@ -122,7 +122,7 @@ namespace KEngine {
         protected void SetScenes(params (string, SceneLoader)[] scenes) {
             foreach (var scene in scenes)
             {
-                this.scenes[scene.Item1] = scene.Item2;
+                KGame.scenes[scene.Item1] = scene.Item2;
             }
         }
         private void LoadScene(SceneLoader sceneLoader) {
@@ -138,7 +138,7 @@ namespace KEngine {
             sceneLoader();
         }
 
-        public void ReloadScene() {
+        public static void ReloadScene() {
             sceneToLoad = (SceneLoader)scenes[lastScene];
         }
 
