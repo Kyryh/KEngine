@@ -17,7 +17,7 @@ namespace KEngine {
         protected SpriteBatch spriteBatch;
 
         SceneLoader sceneToLoad = null;
-        SceneLoader lastScene = null;
+        int lastScene = 0;
 
         List<GameObject> gameObjects = new();
         List<Component> components = new();
@@ -111,9 +111,11 @@ namespace KEngine {
             );
         }
         public void LoadScene(int index) {
+            lastScene = index;
             sceneToLoad = (SceneLoader)scenes[index];
         }
         public void LoadScene(string name) {
+            lastScene = scenes.IndexOf(name);
             sceneToLoad = (SceneLoader)scenes[name];
         }
 
@@ -134,11 +136,10 @@ namespace KEngine {
             }
             gameObjects.RemoveAll(go => !go.DontDestroyOnLoad);
             sceneLoader();
-            lastScene = sceneLoader;
         }
 
         public void ReloadScene() {
-            sceneToLoad = lastScene;
+            sceneToLoad = (SceneLoader)scenes[lastScene];
         }
 
         protected override void LoadContent() {
